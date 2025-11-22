@@ -94,25 +94,37 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Copy Clean Page URL',
     contexts: ['page']
   });
+
+  chrome.contextMenus.create({
+  id: 'openCleanLink',
+  title: 'Open Clean Link',
+  contexts: ['link']
+  });
 });
 
 // Lidar com cliques no menu de contexto
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   let urlToClean;
   
-  if (info.menuItemId === 'copyCleanLink') {
+  if (info.menuItemId === 'copyCleanLink' || info.menuItemId === 'openCleanLink') {
     // URL do link clicado
     urlToClean = info.linkUrl;
   } else if (info.menuItemId === 'copyCleanPageURL') {
     // URL da página atual
     urlToClean = info.pageUrl;
   }
-  
+
   if (urlToClean) {
     const cleanedURL = cleanURL(urlToClean);
     
-    // Copiar para clipboard
-    copyToClipboard(cleanedURL, tab.id);
+      // Se abrir link limpo directamente
+    if (info.menuItemId === 'openCleanLink') {
+      chrome.tabs.create({ url: cleanedURL, active: false });
+    } else {
+       // Copiar para clipboard
+      copyToClipboard(cleanedURL, tab.id);
+    }
+   
   }
 });
 

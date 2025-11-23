@@ -1,4 +1,3 @@
-```markdown
 # Copy Clean Link - Chrome Extension
 
 Chrome extension that removes tracking parameters from URLs when copying links or opening them.
@@ -60,18 +59,14 @@ The extension automatically removes parameters from:
 ## 📝 Example
 
 **Original URL:**
-```
 
 [https://exemplo.com/artigo?utm\_source=facebook\&utm\_medium=social\&fbclid=IwAR123xyz\&utm\_campaign=promo](https://exemplo.com/artigo?utm_source=facebook&utm_medium=social&fbclid=IwAR123xyz&utm_campaign=promo)
 
-```
 
 **Clean URL:**
-```
 
 [https://exemplo.com/artigo](https://exemplo.com/artigo)
 
-```
 
 ## 🔒 Privacy
 
@@ -101,4 +96,3 @@ Edit the `trackingParams` array in `background.js` and add the parameters you wa
 ---
 
 **Note**: This extension is inspired by the "Copy Clean Link" feature in Firefox.
-```

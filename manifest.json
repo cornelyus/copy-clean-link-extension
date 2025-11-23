@@ -2,11 +2,12 @@
   "manifest_version": 3,
   "name": "Copy Clean Link",
   "version": "1.0",
-  "description": "Removes tracking parameters from URLs when copying",
+  "description": "Removes tracking parameters (like utm_*, fbclid, gclid) from URLs when copying links or opening them, providing a clean link.",
   "permissions": [
     "contextMenus",
     "clipboardWrite",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"

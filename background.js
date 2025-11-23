@@ -1,6 +1,6 @@
-// Lista de parâmetros de tracking comuns
+// List of common tracking parameters
 const trackingParams = [
-  // Google Analytics e Google Ads
+  // Google Analytics and Google Ads
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
   'gclid', 'gclsrc', 'dclid', 'gbraid', 'wbraid',
   
@@ -28,35 +28,35 @@ const trackingParams = [
   'ref', 'ref_', 'pf_rd_r', 'pf_rd_p', 'pf_rd_m', 'pf_rd_s', 'pf_rd_t', 'pf_rd_i',
   'pd_rd_r', 'pd_rd_w', 'pd_rd_wg',
   
-  // Outras plataformas
+  // Other platforms
   'igshid', 'igsh', // Instagram
   'zanpid', // Zanox
   'kclickid', // Kenshoo
   'aclk', // AdRoll
-  'src', 'ref', 'source', // Genéricos
-  '_ga', '_gl', // Google Analytics adicionais
-  'pcrid', 'pmt', 'pkw', // Parâmetros de campanha
+  'src', 'ref', 'source', // Generic
+  '_ga', '_gl', // Additional Google Analytics
+  'pcrid', 'pmt', 'pkw', // Campaign parameters
   'ncid', 'sr_share', // Reddit
   
-  // Rastreamento de sessão e conversão
+  // Session and conversion tracking
   'sessionid', 'session_id', 'sid',
   'cvid', 'oicd', 'clickid',
   
-  // Parâmetros de afiliados
+  // Affiliate parameters
   'affid', 'affiliate', 'aff_id', 'aff_sub'
 ];
 
-// Função para limpar a URL
+// Function to clean the URL
 function cleanURL(url) {
   try {
     const urlObj = new URL(url);
     
-    // Remove parâmetros de tracking
+    // Remove tracking parameters
     trackingParams.forEach(param => {
       urlObj.searchParams.delete(param);
     });
     
-    // Remove parâmetros que começam com utm_ (catch-all)
+    // Remove parameters that start with utm_ (catch-all)
     const allParams = Array.from(urlObj.searchParams.keys());
     allParams.forEach(param => {
       if (param.toLowerCase().startsWith('utm_')) {
@@ -64,31 +64,31 @@ function cleanURL(url) {
       }
     });
     
-    // Retorna URL limpa
+    // Return clean URL
     let cleanedURL = urlObj.toString();
     
-    // Remove '?' no final se não houver parâmetros
+    // Remove '?' at the end if there are no parameters
     if (cleanedURL.endsWith('?')) {
       cleanedURL = cleanedURL.slice(0, -1);
     }
     
     return cleanedURL;
   } catch (error) {
-    console.error('Erro ao limpar URL:', error);
-    return url; // Retorna URL original se houver erro
+    console.error('Error cleaning URL:', error);
+    return url; // Return original URL if there is an error
   }
 }
 
-// Criar menu de contexto quando a extensão é instalada
+// Create context menu when the extension is installed
 chrome.runtime.onInstalled.addListener(() => {
-  // Menu para links
+  // Menu for links
   chrome.contextMenus.create({
     id: 'copyCleanLink',
     title: 'Copy Clean Link',
     contexts: ['link']
   });
   
-  // Menu para a página atual
+  // Menu for the current page
   chrome.contextMenus.create({
     id: 'copyCleanPageURL',
     title: 'Copy Clean Page URL',
@@ -102,42 +102,42 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Lidar com cliques no menu de contexto
+// Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   let urlToClean;
   
   if (info.menuItemId === 'copyCleanLink' || info.menuItemId === 'openCleanLink') {
-    // URL do link clicado
+    // URL of the clicked link
     urlToClean = info.linkUrl;
   } else if (info.menuItemId === 'copyCleanPageURL') {
-    // URL da página atual
+    // URL of the current page
     urlToClean = info.pageUrl;
   }
 
   if (urlToClean) {
     const cleanedURL = cleanURL(urlToClean);
     
-      // Se abrir link limpo directamente
+      // If opening clean link directly
     if (info.menuItemId === 'openCleanLink') {
       chrome.tabs.create({ url: cleanedURL, active: false });
     } else {
-       // Copiar para clipboard
+       // Copy to clipboard
       copyToClipboard(cleanedURL, tab.id);
     }
    
   }
 });
 
-// Função para copiar texto para clipboard
+// Function to copy text to clipboard
 function copyToClipboard(text, tabId) {
-  // Injetar script no tab ativo para copiar
+  // Inject script into the active tab to copy
   chrome.scripting.executeScript({
     target: { tabId: tabId },
     func: (textToCopy) => {
       navigator.clipboard.writeText(textToCopy).then(() => {
-        console.log('URL limpa copiada:', textToCopy);
+        console.log('Clean URL copied:', textToCopy);
       }).catch(err => {
-        console.error('Erro ao copiar:', err);
+        console.error('Error copying:', err);
       });
     },
     args: [text]

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Copy Clean Link",
   "version": "1.0",
-  "description": "Remove parâmetros de tracking das URLs ao copiar",
+  "description": "Removes tracking parameters from URLs when copying",
   "permissions": [
     "contextMenus",
     "clipboardWrite",

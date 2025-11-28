@@ -1,19 +1,29 @@
 {
   "manifest_version": 3,
   "name": "Copy Clean Link",
-  "version": "1.0",
-  "description": "Removes tracking parameters (like utm_*, fbclid, gclid) from URLs when copying links or opening them, providing a clean link.",
+  "version": "1.1",
+  "description": "Remove tracking parameters from URLs with visual management interface. Clean links for better privacy.",
   "permissions": [
     "contextMenus",
     "clipboardWrite",
     "scripting",
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "Copy Clean Link"
   },
   "icons": {
     "16": "icon16.png",

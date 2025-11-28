@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copy Clean Link</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🔗 Copy Clean Link</h1>
+      <p class="subtitle">Remove tracking parameters from URLs</p>
+    </header>
+
+    <!-- Current URL Preview Section -->
+    <section class="preview-section">
+      <div class="url-box">
+        <label class="url-label">📎 Current URL</label>
+        <div class="url-display" id="originalUrl">Loading...</div>
+      </div>
+      
+      <div class="arrow">↓</div>
+      
+      <div class="url-box clean">
+        <label class="url-label">✨ Clean URL</label>
+        <div class="url-display" id="cleanUrl">Loading...</div>
+      </div>
+
+      <button id="copyBtn" class="copy-button">
+        <span id="copyBtnText">📋 Copy Clean URL</span>
+      </button>
+    </section>
+
+    <!-- Tracking Categories Section -->
+    <section class="categories-section">
+      <h2>🎛️ Tracking Categories</h2>
+      <p class="info-text">Toggle categories to customize what gets removed</p>
+      
+      <div class="categories-list">
+        <!-- Google Analytics -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="google" checked>
+            <span class="category-name">
+              <span class="icon">📊</span>
+              Google Analytics
+            </span>
+            <span class="param-count">(utm_*, gclid)</span>
+          </label>
+        </div>
+
+        <!-- Facebook -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="facebook" checked>
+            <span class="category-name">
+              <span class="icon">📘</span>
+              Facebook
+            </span>
+            <span class="param-count">(fbclid, fb_*)</span>
+          </label>
+        </div>
+
+        <!-- Microsoft/Bing -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="microsoft" checked>
+            <span class="category-name">
+              <span class="icon">🔷</span>
+              Microsoft/Bing
+            </span>
+            <span class="param-count">(msclkid)</span>
+          </label>
+        </div>
+
+        <!-- Social Media -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="social" checked>
+            <span class="category-name">
+              <span class="icon">📱</span>
+              Social Media
+            </span>
+            <span class="param-count">(Twitter, LinkedIn, TikTok, Instagram)</span>
+          </label>
+        </div>
+
+        <!-- Email Marketing -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="email" checked>
+            <span class="category-name">
+              <span class="icon">📧</span>
+              Email Marketing
+            </span>
+            <span class="param-count">(mc_*, _hsenc)</span>
+          </label>
+        </div>
+
+        <!-- Amazon -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="amazon" checked>
+            <span class="category-name">
+              <span class="icon">📦</span>
+              Amazon
+            </span>
+            <span class="param-count">(ref, pf_rd_*, pd_rd_*)</span>
+          </label>
+        </div>
+
+        <!-- Generic Tracking -->
+        <div class="category-item">
+          <label class="category-label">
+            <input type="checkbox" class="category-checkbox" data-category="generic" checked>
+            <span class="category-name">
+              <span class="icon">🔍</span>
+              Generic Tracking
+            </span>
+            <span class="param-count">(sessionid, clickid, affiliate)</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Custom Parameters Section -->
+    <section class="custom-section">
+      <h2>➕ Custom Parameters</h2>
+      <p class="info-text">Add your own parameters to remove</p>
+      
+      <div class="custom-input-group">
+        <input 
+          type="text" 
+          id="customParam" 
+          class="custom-input" 
+          placeholder="e.g., my_tracking_param"
+        >
+        <button id="addParamBtn" class="add-button">Add</button>
+      </div>
+
+      <div class="custom-params-list" id="customParamsList">
+        <!-- Custom parameters will be added here -->
+      </div>
+    </section>
+
+    <!-- Statistics Section (Optional) -->
+    <section class="stats-section">
+      <h2>📊 Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="cleanedCount">0</div>
+          <div class="stat-label">URLs Cleaned</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="paramsRemoved">0</div>
+          <div class="stat-label">Params Removed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <button id="resetBtn" class="reset-button">Reset to Defaults</button>
+      <p class="version">v1.1</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

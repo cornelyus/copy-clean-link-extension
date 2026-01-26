@@ -433,13 +433,14 @@ header h1::before {
 
 .param-count {
   font-size: 9px;
-  color: #666;
+  color: #ff8c00;
   font-family: 'Courier New', monospace;
   letter-spacing: 0.5px;
   background: #0a0a0a;
   padding: 2px 6px;
   border-radius: 3px;
-  border: 1px solid #000;
+  border: 1px solid #333;
+  text-shadow: 0 0 4px rgba(255, 140, 0, 0.5);
 }
 
 /* Custom Parameters */

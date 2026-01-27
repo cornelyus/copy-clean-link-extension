@@ -2,13 +2,15 @@
 
 Chrome extension that removes tracking parameters from URLs with a visual management interface.
 
-## v1.1: Visual Management Interface
+## v1.2: Retro Skeuomorphic UI
 
-- **Interactive Popup** - Click the extension icon to open a modern interface
-- **Real-time Preview** - See before/after URL cleaning
+- **Amber VFD Display** - Vintage hardware aesthetic with glowing amber displays
+- **Interactive Popup** - Click the extension icon to open the interface
+- **Real-time Preview** - See before/after URL cleaning on authentic displays
+- **Physical Toggle Switches** - Realistic hardware-style switches
 - **Category Management** - Toggle tracking categories on/off
 - **Custom Parameters** - Add your own parameters to remove
-- **Usage Statistics** - Track how many URLs you've cleaned
+- **Usage Statistics** - Track cleaning activity on LED-style displays
 
 ## 🎯 Features
 
@@ -18,33 +20,41 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - **Open Clean Link**: Right-click on any link and select "Open Clean Link" to open the URL without tracking parameters in a new background tab
 
 ### Visual Management
-- **Preview Interface**: See your URL before and after cleaning
-- **Category Toggles**: Enable/disable tracking categories:
-  - 📊 Google Analytics (utm_*, gclid)
-  - 📘 Facebook (fbclid, fb_*)
-  - 🔷 Microsoft/Bing (msclkid)
-  - 📱 Social Media (Twitter, LinkedIn, TikTok, Instagram)
-  - 📧 Email Marketing (Mailchimp, HubSpot)
-  - 📦 Amazon (ref, pf_rd_*, pd_rd_*)
-  - 🔍 Generic Tracking (sessionid, clickid, affiliate)
+- **Preview Interface**: See your URL before and after cleaning on VFD-style displays
+- **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
+  - GA - Google Analytics (utm_*, gclid)
+  - FB - Facebook (fbclid, fb_*)
+  - MS - Microsoft/Bing (msclkid)
+  - SM - Social Media (Twitter, LinkedIn, TikTok, Instagram)
+  - EM - Email Marketing (Mailchimp, HubSpot)
+  - AZ - Amazon (ref, pf_rd_*, pd_rd_*)
+  - GN - Generic Tracking (sessionid, clickid, affiliate)
 - **Custom Parameters**: Add your own tracking parameters
-- **Statistics**: Track your cleaning activity
+- **Statistics**: Track your cleaning activity on amber LED displays
+
+### Design Aesthetic
+- **Skeuomorphic Interface**: Realistic hardware controls and displays
+- **Amber VFD Displays**: Vintage Vacuum Fluorescent Display aesthetic
+- **Brushed Metal Panels**: Industrial control panel look
+- **Physical Switches**: Authentic toggle switch animations
+- **Industrial Design**: Inspired by 1970s-80s audio equipment and hardware
 
 ## 🧹 Tracking Parameters Removed
 
 The extension automatically removes parameters from:
-- **Google Analytics**: utm_source, utm_medium, utm_campaign, utm_term, utm_content
+- **Google Analytics**: utm_source, utm_medium, utm_campaign, utm_term, utm_content, _ga, _gl
 - **Google Ads**: gclid, gclsrc, dclid, gbraid, wbraid
-- **Facebook**: fbclid, fb_action_ids, fb_action_types
-- **Microsoft/Bing**: msclkid
-- **Twitter/X**: twclid, tw_source
-- **LinkedIn**: li_fat_id, lipi
-- **TikTok**: ttclid
-- **Email Marketing**: mc_cid, mc_eid (Mailchimp), _hsenc, _hsmi (HubSpot)
-- **Amazon**: ref, pf_rd_*, pd_rd_*
+- **Facebook**: fbclid, fb_action_ids, fb_action_types, fb_source, fb_ref
+- **Microsoft/Bing**: msclkid, ms_clkid
+- **Twitter/X**: twclid, tw_source, ref_src, ref_url
+- **LinkedIn**: li_fat_id, lipi, licu
+- **TikTok**: ttclid, tt_medium, tt_content
 - **Instagram**: igshid, igsh
+- **Email Marketing**: mc_cid, mc_eid (Mailchimp), _hsenc, _hsmi (HubSpot), vero_id, vero_conv
+- **Amazon**: ref, ref_, pf_rd_r, pf_rd_p, pf_rd_m, pf_rd_s, pf_rd_t, pf_rd_i, pd_rd_r, pd_rd_w, pd_rd_wg
 - **Session Tracking**: sessionid, session_id, sid
-- **Affiliate**: affid, affiliate, aff_id, aff_sub
+- **Affiliate**: affid, affiliate, aff_id, aff_sub, zanpid, kclickid, aclk
+- **Generic**: cvid, oicd, clickid, src, source, pcrid, pmt, pkw, ncid, sr_share
 - And many others...
 
 ## 📦 How to Install
@@ -71,9 +81,9 @@ We're working on publishing this extension to the Chrome Web Store for easier in
 
 ### Using the Popup Interface (Recommended)
 1. Click the extension icon in your toolbar
-2. View your current URL and its cleaned version
-3. Customize which categories to clean
-4. Click "Copy Clean URL" to copy the cleaned version
+2. View your current URL and its cleaned version on the amber VFD displays
+3. Customize which categories to clean using the physical toggle switches
+4. Click the orange "Copy Clean URL" button
 5. Add custom parameters if needed
 
 ### Using Context Menu
@@ -109,37 +119,49 @@ https://example.com/article
 ## 🎨 Customization
 
 ### Toggle Categories
-Open the popup and use checkboxes to enable/disable specific tracking categories. Your preferences are automatically saved.
+Open the popup and use the physical toggle switches to enable/disable specific tracking categories. Watch them slide with smooth animations! Your preferences are automatically saved.
 
 ### Add Custom Parameters
 1. Open the popup
 2. Scroll to "Custom Parameters" section
-3. Type your parameter name (e.g., `my_tracking_param`)
+3. Type your parameter name in the amber display (e.g., `my_tracking_param`)
 4. Click "Add"
 5. The parameter will be removed from all future URLs
 
 ### Reset to Defaults
-Click the "Reset to Defaults" button in the popup to restore all original settings.
+Click the red "Reset to Defaults" button in the popup to restore all original settings.
 
 ## 🔒 Privacy
 
 - The extension runs locally in your browser
 - It does not send data to external servers
 - It does not collect personal information
-- All settings are stored locally
+- All settings are stored locally in your browser
 - Open source - you can view all the code
+- See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for full details
 
 ## 🛠️ Extension Files
 
 - `manifest.json` - Extension configuration
 - `background.js` - URL cleaning logic and context menu
 - `popup.html` - Popup interface structure
-- `popup.css` - Popup styling
+- `popup.css` - Popup styling (skeuomorphic amber VFD theme)
 - `popup.js` - Popup functionality
 - `icon16.png`, `icon48.png`, `icon128.png` - Extension icons
 - `README.md` - This file
+- `PRIVACY_POLICY.md` - Privacy policy
 
 ## 📊 What's New
+
+### Version 1.2 (Current)
+- **New UI**: Retro skeuomorphic design with amber VFD displays
+- Physical toggle switches with realistic animations
+- Brushed metal panels and industrial aesthetic
+- LED-style alphanumeric indicators (GA, FB, MS, etc.)
+- Improved text contrast on amber displays
+- Glowing text effects for authentic VFD look
+- Hardware-inspired design elements throughout
+- Updated manifest with better SEO description
 
 ### Version 1.1
 - Added visual popup interface
@@ -155,19 +177,28 @@ Click the "Reset to Defaults" button in the popup to restore all original settin
 - Basic URL cleaning
 - Open clean link feature
 
+## 🎨 Design Inspiration
+
+The current UI is inspired by:
+- 1970s-80s VFD (Vacuum Fluorescent Display) technology
+- Vintage calculators and audio equipment
+- Industrial control panels
+- Classic analog hardware interfaces
+- Authentic skeuomorphic design principles
+
 ## 📄 License
 
 Free for personal and commercial use.
 
 ## 🤝 Contribute
 
-Feel free to modify and improve the extension! 
+Feel free to modify and improve the extension!
 
 ### Report Issues
 If you find any bugs or have suggestions, please open an issue on GitHub.
 
 ---
 
-**Note**: This extension is inspired by the "Copy Clean Link" feature in Firefox, enhanced with visual management capabilities.
+**Note**: This extension is inspired by the "Copy Clean Link" feature in Firefox, enhanced with visual management capabilities and a unique retro hardware aesthetic.
 
-Made for a cleaner, more private web.
+Made for a cleaner, more private web. 🔗✨

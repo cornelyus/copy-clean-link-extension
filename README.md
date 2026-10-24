@@ -27,6 +27,7 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - **Preview Interface**: See your URL before and after cleaning on VFD-style displays
 - **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
   - ST - Site-specific rules (Amazon, YouTube, X, Instagram, TikTok, Spotify, LinkedIn)
+  - RD - Unwrap redirect links (Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn, Steam)
   - GA - Google Analytics (utm_*, gclid)
   - FB - Facebook (fbclid, fb_*)
   - MS - Microsoft/Bing (msclkid)
@@ -72,6 +73,19 @@ Some parameters are only tracking on certain sites (for example `t` is a share I
 - **TikTok**: _r, _t, is_from_webapp, sender_device, share and sender IDs
 - **Spotify**: si, context
 - **LinkedIn**: trk, trackingId, refId, lipi, email tracking IDs
+
+### Redirect unwrapping
+
+Many sites send links through their own redirect page, which records the click. These are replaced with the real destination, which is then cleaned as usual. No network request is made: the destination is already in the link.
+- **Google**: `google.*/url?q=…`
+- **Facebook / Instagram**: `l.facebook.com/l.php?u=…`, `l.instagram.com/?u=…`
+- **Outlook Safe Links**: `*.safelinks.protection.outlook.com/?url=…`
+- **YouTube**: `youtube.com/redirect?q=…`
+- **Reddit**: `out.reddit.com/…?url=…`
+- **LinkedIn**: `linkedin.com/redir/redirect?url=…`
+- **Steam**: `steamcommunity.com/linkfilter/?url=…`
+
+Only `http` and `https` destinations are used. Anything else leaves the link as it is.
 
 ## 📦 How to Install
 

@@ -19,6 +19,10 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - **Copy Clean Page URL**: Right-click on the page and select "Copy Clean Page URL" to copy the current, clean URL
 - **Open Clean Link**: Right-click on any link and select "Open Clean Link" to open the URL without tracking parameters in a new background tab
 
+### Keyboard Shortcut
+- **Alt+Shift+C** copies the clean URL of the current tab. A ✓ on the toolbar icon confirms the copy (✕ means it failed, for example on `chrome://` pages)
+- Change it at `chrome://extensions/shortcuts`
+
 ### Visual Management
 - **Preview Interface**: See your URL before and after cleaning on VFD-style displays
 - **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
@@ -85,6 +89,11 @@ We're working on publishing this extension to the Chrome Web Store for easier in
 3. Customize which categories to clean using the physical toggle switches
 4. Click the orange "Copy Clean URL" button
 5. Add custom parameters if needed
+
+### Using the Keyboard Shortcut
+1. Press **Alt+Shift+C** on any page
+2. The clean URL of the page is copied to the clipboard
+3. The toolbar icon briefly shows ✓
 
 ### Using Context Menu
 #### Clean a link:

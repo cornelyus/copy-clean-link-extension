@@ -102,6 +102,15 @@ function renderCustomParams(customParams) {
   });
 }
 
+// Show the current keyboard shortcut (users can change it in chrome://extensions/shortcuts)
+async function renderShortcutHint() {
+  const commands = await chrome.commands.getAll();
+  const shortcut = commands.find(c => c.name === 'copy-clean-url')?.shortcut;
+  document.getElementById('shortcutHint').textContent = shortcut
+    ? `Shortcut: ${shortcut}`
+    : 'No shortcut set (chrome://extensions/shortcuts)';
+}
+
 // Initialize popup
 async function initialize() {
   const settings = await loadSettings();
@@ -117,6 +126,9 @@ async function initialize() {
 
   // Update stats
   updateStatsDisplay(settings.stats);
+
+  // Show keyboard shortcut
+  await renderShortcutHint();
 
   // Event: Copy button
   document.getElementById('copyBtn').addEventListener('click', async () => {

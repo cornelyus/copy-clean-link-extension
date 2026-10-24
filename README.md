@@ -143,7 +143,8 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 ## 🛠️ Extension Files
 
 - `manifest.json` - Extension configuration
-- `background.js` - URL cleaning logic and context menu
+- `cleaner.js` - Shared URL cleaning logic and tracking parameter lists
+- `background.js` - Context menu handling
 - `popup.html` - Popup interface structure
 - `popup.css` - Popup styling (skeuomorphic amber VFD theme)
 - `popup.js` - Popup functionality
@@ -153,7 +154,13 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 
 ## 📊 What's New
 
-### Version 1.2 (Current)
+### Version 1.2.1 (Current)
+- Fixed: the popup now removes all `utm_*` parameters, matching the context menu
+- `utm_*` parameters are only removed when the Google Analytics category is enabled, as its label says
+- Fixed: "Could not establish connection" error when changing settings in the popup
+- URL cleaning logic shared between popup and context menu (`cleaner.js`)
+
+### Version 1.2
 - **New UI**: Retro skeuomorphic design with amber VFD displays
 - Physical toggle switches with realistic animations
 - Brushed metal panels and industrial aesthetic

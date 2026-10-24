@@ -149,8 +149,25 @@ const siteRules = [
   }
 ];
 
-// All categories, including the rule-based 'sites' category
-const CATEGORIES = ['sites', ...Object.keys(categoryParams)];
+// Redirect links that wrap the real destination in a query param, used by the 'unwrap' category.
+// hosts match the domain and its subdomains (hostPattern is used instead when given).
+// path is matched exactly, or as a prefix when it ends in '*'; no path matches any path.
+const redirectRules = [
+  { name: 'Google', hostPattern: /(^|\.)google\.[a-z]{2,3}(\.[a-z]{2})?$/, path: '/url', params: ['q', 'url'] },
+  { name: 'Facebook', hosts: ['l.facebook.com', 'lm.facebook.com'], path: '/l.php', params: ['u'] },
+  { name: 'Instagram', hosts: ['l.instagram.com'], params: ['u'] },
+  { name: 'Outlook Safe Links', hosts: ['safelinks.protection.outlook.com'], params: ['url'] },
+  { name: 'YouTube', hosts: ['youtube.com'], path: '/redirect', params: ['q'] },
+  { name: 'Reddit', hosts: ['out.reddit.com'], params: ['url'] },
+  { name: 'LinkedIn', hosts: ['linkedin.com'], path: '/redir/redirect', params: ['url'] },
+  { name: 'Steam', hosts: ['steamcommunity.com'], path: '/linkfilter*', params: ['url', 'u'] }
+];
+
+// Nested redirects deeper than this are left as they are
+const MAX_UNWRAP_DEPTH = 3;
+
+// All categories, including the rule-based 'sites' and 'unwrap' categories
+const CATEGORIES = ['sites', 'unwrap', ...Object.keys(categoryParams)];
 
 // Categories that existed before knownCategories was stored (v1.2.1 and earlier)
 const LEGACY_CATEGORIES = ['google', 'facebook', 'microsoft', 'social', 'email', 'amazon', 'generic'];
@@ -208,12 +225,55 @@ function applySiteRules(urlObj, removed) {
   });
 }
 
+function redirectRuleFor(urlObj) {
+  return redirectRules.find(rule => {
+    const hostOk = rule.hostPattern
+      ? rule.hostPattern.test(urlObj.hostname)
+      : hostMatches(urlObj.hostname, rule.hosts);
+    const pathOk = !rule.path || (rule.path.endsWith('*')
+      ? urlObj.pathname.startsWith(rule.path.slice(0, -1))
+      : urlObj.pathname === rule.path);
+    return hostOk && pathOk;
+  });
+}
+
+// Replace redirect links with the URL they point to, recording each one unwrapped.
+// Only http(s) destinations are accepted, so javascript: or data: URLs are never produced.
+function unwrapRedirects(urlObj, removed) {
+  for (let depth = 0; depth < MAX_UNWRAP_DEPTH; depth++) {
+    const rule = redirectRuleFor(urlObj);
+    const target = rule && rule.params.map(p => urlObj.searchParams.get(p)).find(Boolean);
+    if (!target) {
+      break;
+    }
+
+    let targetObj;
+    try {
+      targetObj = new URL(target);
+    } catch {
+      break;
+    }
+    if (targetObj.protocol !== 'http:' && targetObj.protocol !== 'https:') {
+      break;
+    }
+
+    removed.push({ param: 'redirect', reason: `${rule.name} redirect removed` });
+    urlObj = targetObj;
+  }
+  return urlObj;
+}
+
 // Clean URL based on enabled categories and custom params.
 // Returns { url, removedCount, removed: [{ param, reason }] }
 function cleanURL(url, enabledCategories, customParams) {
   try {
-    const urlObj = new URL(url);
+    let urlObj = new URL(url);
     const removed = [];
+
+    // Unwrap redirect links first, so the real destination gets cleaned
+    if (enabledCategories.includes('unwrap')) {
+      urlObj = unwrapRedirects(urlObj, removed);
+    }
 
     const removeParam = (param, reason) => {
       if (urlObj.searchParams.has(param)) {
@@ -259,5 +319,5 @@ function cleanURL(url, enabledCategories, customParams) {
 
 // Export for Node tests (module is undefined in the extension)
 if (typeof module !== 'undefined') {
-  module.exports = { cleanURL, enableNewCategories, categoryParams, siteRules, CATEGORIES, STORAGE_KEYS };
+  module.exports = { cleanURL, enableNewCategories, categoryParams, siteRules, redirectRules, CATEGORIES, STORAGE_KEYS };
 }

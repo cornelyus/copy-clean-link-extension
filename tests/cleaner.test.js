@@ -142,11 +142,78 @@ test('site rules are skipped when the sites category is off', () => {
   );
 });
 
+// Redirect unwrapping
+
+const enc = encodeURIComponent;
+
+test('unwraps redirect links and cleans the destination', () => {
+  const target = 'https://example.com/article?id=7&utm_source=google&fbclid=x';
+  const expected = 'https://example.com/article?id=7';
+  const cases = [
+    `https://www.google.com/url?sa=t&q=${enc(target)}&usg=AOv`,
+    `https://www.google.co.uk/url?url=${enc(target)}&sa=D`,
+    `https://l.facebook.com/l.php?u=${enc(target)}&h=AT0x`,
+    `https://l.instagram.com/?u=${enc(target)}&e=AT1`,
+    `https://eur01.safelinks.protection.outlook.com/?url=${enc(target)}&data=05%7C01&sdata=abc&reserved=0`,
+    `https://www.youtube.com/redirect?event=video_description&redir_token=QUF&q=${enc(target)}`,
+    `https://out.reddit.com/t3_abc?url=${enc(target)}&token=xyz`,
+    `https://www.linkedin.com/redir/redirect?url=${enc(target)}&urlhash=abc`,
+    `https://steamcommunity.com/linkfilter/?u=${enc(target)}`
+  ];
+  cases.forEach(url => assert.equal(clean(url), expected, url));
+});
+
+test('reports the unwrapped redirect', () => {
+  const result = cleanURL(`https://l.facebook.com/l.php?u=${enc('https://example.com/')}`, ALL, []);
+  assert.equal(result.url, 'https://example.com/');
+  assert.deepEqual(result.removed, [{ param: 'redirect', reason: 'Facebook redirect removed' }]);
+});
+
+test('unwraps nested redirects', () => {
+  const inner = `https://l.facebook.com/l.php?u=${enc('https://example.com/page')}`;
+  assert.equal(clean(`https://www.google.com/url?q=${enc(inner)}`), 'https://example.com/page');
+});
+
+test('the unwrapped destination gets site rules too', () => {
+  const target = 'https://youtu.be/dQw4w9WgXcQ?si=abc';
+  assert.equal(clean(`https://www.google.com/url?q=${enc(target)}`), 'https://youtu.be/dQw4w9WgXcQ');
+});
+
+test('never unwraps to non-http URLs', () => {
+  const evil = `https://www.google.com/url?q=${enc('javascript:alert(1)')}`;
+  assert.equal(clean(evil), evil);
+  const data = `https://l.facebook.com/l.php?u=${enc('data:text/html,hi')}`;
+  assert.equal(clean(data), data);
+});
+
+test('leaves similar but non-redirect pages alone', () => {
+  // Google search results use q too, but are not redirects
+  assert.equal(clean('https://www.google.com/search?q=https%3A%2F%2Fexample.com'), 'https://www.google.com/search?q=https%3A%2F%2Fexample.com');
+  // relative targets are not followed
+  assert.equal(clean('https://www.google.com/url?q=%2Fsearch'), 'https://www.google.com/url?q=%2Fsearch');
+  // look-alike domains
+  assert.equal(clean(`https://google.example.com/url?q=${enc('https://example.com/')}`), `https://google.example.com/url?q=${enc('https://example.com/')}`);
+});
+
+test('redirects are kept when unwrap is off', () => {
+  const url = `https://l.facebook.com/l.php?u=${enc('https://example.com/')}`;
+  assert.equal(cleanURL(url, ALL.filter(c => c !== 'unwrap'), []).url, url);
+});
+
 // Settings migration
 
 test('migration: turns on new categories for users upgrading from v1.2.x', () => {
   const enabled = ['google', 'facebook', 'social'];
-  assert.deepEqual(enableNewCategories(enabled, undefined), ['google', 'facebook', 'social', 'sites']);
+  assert.deepEqual(enableNewCategories(enabled, undefined), ['google', 'facebook', 'social', 'sites', 'unwrap']);
+});
+
+test('migration: turns on only the categories added since the last known list', () => {
+  // sites and facebook were known and are off, so they stay off
+  const known = ['sites', 'google', 'facebook'];
+  assert.deepEqual(
+    enableNewCategories(['google'], known),
+    ['google', 'unwrap', 'microsoft', 'social', 'email', 'amazon', 'generic']
+  );
 });
 
 test('migration: keeps categories the user turned off', () => {

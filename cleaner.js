@@ -38,48 +38,211 @@ const categoryParams = {
   ]
 };
 
+// Why each category's params are removed (shown to the user)
+const categoryReasons = {
+  google: 'Google Analytics/Ads tracking',
+  facebook: 'Facebook click tracking',
+  microsoft: 'Microsoft/Bing ad tracking',
+  social: 'Social media tracking',
+  email: 'Email marketing tracking',
+  amazon: 'Amazon referral tracking',
+  generic: 'Tracking or session parameter'
+};
+
+const AMAZON_DOMAINS = [
+  'amazon.com', 'amazon.co.uk', 'amazon.de', 'amazon.fr', 'amazon.it', 'amazon.es',
+  'amazon.nl', 'amazon.se', 'amazon.pl', 'amazon.com.be', 'amazon.ie', 'amazon.ca',
+  'amazon.com.mx', 'amazon.com.br', 'amazon.co.jp', 'amazon.in', 'amazon.com.au',
+  'amazon.sg', 'amazon.ae', 'amazon.sa', 'amazon.eg', 'amazon.com.tr'
+];
+
+// Site-specific rules, used by the 'sites' category.
+// hosts match the domain and its subdomains. A param name ending in '*' is a prefix.
+// canonical(urlObj) may return a shorter path; the query string is then dropped entirely.
+const siteRules = [
+  {
+    id: 'amazon',
+    hosts: AMAZON_DOMAINS,
+    canonical: urlObj => {
+      const match = urlObj.pathname.match(/\/(?:dp|gp\/product|gp\/aw\/d)\/([A-Z0-9]{10})(?=[/?#]|$)/i);
+      return match ? `/dp/${match[1]}` : null;
+    },
+    params: [
+      { name: 'ref', reason: 'Amazon referral tracking' },
+      { name: 'ref_', reason: 'Amazon referral tracking' },
+      { name: 'pf_rd_*', reason: 'Amazon page placement tracking' },
+      { name: 'pd_rd_*', reason: 'Amazon recommendation tracking' },
+      { name: 'psc', reason: 'Amazon product selection tracking' },
+      { name: 'content-id', reason: 'Amazon placement tracking' },
+      { name: 'th', reason: 'Amazon variation tracking' },
+      { name: 'crid', reason: 'Amazon search session tracking' },
+      { name: 'sprefix', reason: 'Amazon search typing tracking' },
+      { name: 'qid', reason: 'Amazon search time tracking' },
+      { name: 'sr', reason: 'Amazon search rank tracking' },
+      { name: 'dib', reason: 'Amazon encoded tracking data' },
+      { name: 'dib_tag', reason: 'Amazon encoded tracking data' }
+    ]
+  },
+  {
+    id: 'youtube',
+    hosts: ['youtube.com', 'youtu.be'],
+    params: [
+      { name: 'si', reason: 'YouTube share ID, can link the link to your account' },
+      { name: 'is', reason: 'YouTube share ID' },
+      { name: 'pp', reason: 'YouTube search tracking' },
+      { name: 'feature', reason: 'YouTube referral tracking' }
+    ]
+  },
+  {
+    id: 'instagram',
+    hosts: ['instagram.com'],
+    params: [
+      { name: 'igsh', reason: 'Instagram share ID, different for each sharer' },
+      { name: 'igshid', reason: 'Instagram share ID, different for each sharer' }
+    ]
+  },
+  {
+    id: 'twitter',
+    hosts: ['x.com', 'twitter.com'],
+    params: [
+      { name: 's', reason: 'X share source tracking' },
+      { name: 't', reason: 'X share ID, can link the link to your account' }
+    ]
+  },
+  {
+    id: 'tiktok',
+    hosts: ['tiktok.com'],
+    params: [
+      { name: '_r', reason: 'TikTok share tracking' },
+      { name: '_t', reason: 'TikTok share ID' },
+      { name: 'is_from_webapp', reason: 'TikTok share tracking' },
+      { name: 'sender_device', reason: 'TikTok sender device tracking' },
+      { name: 'sender_web_id', reason: 'TikTok sender tracking' },
+      { name: 'is_copy_url', reason: 'TikTok share tracking' },
+      { name: 'share_app_id', reason: 'TikTok share tracking' },
+      { name: 'share_link_id', reason: 'TikTok share ID' },
+      { name: 'sec_user_id', reason: 'TikTok sender account ID' },
+      { name: 'u_code', reason: 'TikTok sender ID' },
+      { name: 'tt_from', reason: 'TikTok share source tracking' }
+    ]
+  },
+  {
+    id: 'spotify',
+    hosts: ['open.spotify.com'],
+    params: [
+      { name: 'si', reason: 'Spotify share ID, can link the link to your account' },
+      { name: 'context', reason: 'Spotify playback context, not needed to share' }
+    ]
+  },
+  {
+    id: 'linkedin',
+    hosts: ['linkedin.com'],
+    params: [
+      { name: 'trk', reason: 'LinkedIn tracking' },
+      { name: 'trackingId', reason: 'LinkedIn tracking ID' },
+      { name: 'refId', reason: 'LinkedIn referral ID' },
+      { name: 'lipi', reason: 'LinkedIn page impression tracking' },
+      { name: 'midToken', reason: 'LinkedIn email tracking' },
+      { name: 'midSig', reason: 'LinkedIn email tracking' },
+      { name: 'trkEmail', reason: 'LinkedIn email tracking' }
+    ]
+  }
+];
+
+// All categories, including the rule-based 'sites' category
+const CATEGORIES = ['sites', ...Object.keys(categoryParams)];
+
+// Categories that existed before knownCategories was stored (v1.2.1 and earlier)
+const LEGACY_CATEGORIES = ['google', 'facebook', 'microsoft', 'social', 'email', 'amazon', 'generic'];
+
+// Turn on categories added since the user's last update; ones they turned off stay off
+function enableNewCategories(enabledCategories, knownCategories = LEGACY_CATEGORIES) {
+  const added = CATEGORIES.filter(category =>
+    !knownCategories.includes(category) && !enabledCategories.includes(category)
+  );
+  return [...enabledCategories, ...added];
+}
+
 // Storage keys
 const STORAGE_KEYS = {
   CATEGORIES: 'enabledCategories',
+  KNOWN_CATEGORIES: 'knownCategories',
   CUSTOM_PARAMS: 'customParams',
   STATS: 'stats'
 };
 
-// Clean URL based on enabled categories and custom params
+function hostMatches(host, domains) {
+  return domains.some(domain => host === domain || host.endsWith('.' + domain));
+}
+
+// Apply the matching site rule (if any), recording what was removed
+function applySiteRules(urlObj, removed) {
+  const rule = siteRules.find(r => hostMatches(urlObj.hostname, r.hosts));
+  if (!rule) {
+    return;
+  }
+
+  const reasonFor = name => rule.params.find(p =>
+    p.name.endsWith('*') ? name.startsWith(p.name.slice(0, -1)) : p.name === name
+  )?.reason;
+
+  const canonicalPath = rule.canonical && rule.canonical(urlObj);
+  if (canonicalPath) {
+    if (canonicalPath !== urlObj.pathname) {
+      urlObj.pathname = canonicalPath;
+      removed.push({ param: 'path', reason: 'Shortened to the product link' });
+    }
+    new Set(urlObj.searchParams.keys()).forEach(name => {
+      removed.push({ param: name, reason: reasonFor(name) || 'Not needed for the product link' });
+    });
+    urlObj.search = '';
+    return;
+  }
+
+  new Set(urlObj.searchParams.keys()).forEach(name => {
+    const reason = reasonFor(name);
+    if (reason) {
+      urlObj.searchParams.delete(name);
+      removed.push({ param: name, reason });
+    }
+  });
+}
+
+// Clean URL based on enabled categories and custom params.
+// Returns { url, removedCount, removed: [{ param, reason }] }
 function cleanURL(url, enabledCategories, customParams) {
   try {
     const urlObj = new URL(url);
-    let removedCount = 0;
+    const removed = [];
 
-    // Collect all params to remove
-    const paramsToRemove = new Set();
-
-    // Add params from enabled categories
-    enabledCategories.forEach(category => {
-      if (categoryParams[category]) {
-        categoryParams[category].forEach(param => paramsToRemove.add(param));
-      }
-    });
-
-    // Add custom params
-    customParams.forEach(param => paramsToRemove.add(param));
-
-    // Remove the parameters
-    paramsToRemove.forEach(param => {
+    const removeParam = (param, reason) => {
       if (urlObj.searchParams.has(param)) {
         urlObj.searchParams.delete(param);
-        removedCount++;
+        removed.push({ param, reason });
       }
+    };
+
+    // Site-specific rules first
+    if (enabledCategories.includes('sites')) {
+      applySiteRules(urlObj, removed);
+    }
+
+    // Params from enabled categories
+    enabledCategories.forEach(category => {
+      (categoryParams[category] || []).forEach(param => removeParam(param, categoryReasons[category]));
     });
 
+    // Custom params
+    customParams.forEach(param => removeParam(param, 'Custom parameter'));
+
     // Remove any utm_* parameters (catch-all, part of the google category)
-    const allParams = Array.from(urlObj.searchParams.keys());
-    allParams.forEach(param => {
-      if (enabledCategories.includes('google') && param.toLowerCase().startsWith('utm_')) {
-        urlObj.searchParams.delete(param);
-        removedCount++;
-      }
-    });
+    if (enabledCategories.includes('google')) {
+      new Set(urlObj.searchParams.keys()).forEach(param => {
+        if (param.toLowerCase().startsWith('utm_')) {
+          removeParam(param, 'Campaign tracking (UTM)');
+        }
+      });
+    }
 
     // Clean up trailing '?'
     let cleanedURL = urlObj.toString();
@@ -87,14 +250,14 @@ function cleanURL(url, enabledCategories, customParams) {
       cleanedURL = cleanedURL.slice(0, -1);
     }
 
-    return { url: cleanedURL, removedCount };
+    return { url: cleanedURL, removedCount: removed.length, removed };
   } catch (error) {
     console.error('Error cleaning URL:', error);
-    return { url, removedCount: 0 };
+    return { url, removedCount: 0, removed: [] };
   }
 }
 
 // Export for Node tests (module is undefined in the extension)
 if (typeof module !== 'undefined') {
-  module.exports = { cleanURL, categoryParams, STORAGE_KEYS };
+  module.exports = { cleanURL, enableNewCategories, categoryParams, siteRules, CATEGORIES, STORAGE_KEYS };
 }

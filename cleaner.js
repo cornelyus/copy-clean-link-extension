@@ -93,3 +93,8 @@ function cleanURL(url, enabledCategories, customParams) {
     return { url, removedCount: 0 };
   }
 }
+
+// Export for Node tests (module is undefined in the extension)
+if (typeof module !== 'undefined') {
+  module.exports = { cleanURL, categoryParams, STORAGE_KEYS };
+}

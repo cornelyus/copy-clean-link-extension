@@ -10,21 +10,21 @@
   <div class="container">
     <!-- Header -->
     <header>
-      <h1>🔗 Copy Clean Link</h1>
+      <h1><span class="brand-dot" aria-hidden="true"></span>Copy Clean Link</h1>
       <p class="subtitle">Remove tracking parameters from URLs</p>
     </header>
 
     <!-- Current URL Preview Section -->
     <section class="preview-section">
       <div class="url-box">
-        <label class="url-label">📎 Current URL</label>
+        <label class="url-label">Current URL</label>
         <div class="url-display" id="originalUrl">Loading...</div>
       </div>
       
-      <div class="arrow">↓</div>
+      <div class="arrow" aria-hidden="true">↓</div>
       
       <div class="url-box clean">
-        <label class="url-label">✨ Clean URL</label>
+        <label class="url-label">Clean URL</label>
         <div class="url-display" id="cleanUrl">Loading...</div>
       </div>
 
@@ -34,15 +34,15 @@
       </details>
 
       <button id="copyBtn" class="copy-button">
-        <span id="copyBtnText">📋 Copy Clean URL</span>
+        <span id="copyBtnText">Copy Clean URL</span>
       </button>
       <p id="shortcutHint" class="info-text shortcut-hint"></p>
     </section>
 
     <!-- Tracking Categories Section -->
     <section class="categories-section">
-      <h2>🎛️ Tracking Categories</h2>
-      <p class="info-text">Toggle categories to customize what gets removed</p>
+      <h2>What to remove</h2>
+      <p class="info-text">Switch off anything you want to keep in links</p>
       
       <div class="categories-list">
         <!-- Site-specific rules -->
@@ -157,7 +157,7 @@
 
     <!-- Custom Parameters Section -->
     <section class="custom-section">
-      <h2>➕ Custom Parameters</h2>
+      <h2>Custom parameters</h2>
       <p class="info-text">Add your own parameters to remove</p>
       
       <div class="custom-input-group">
@@ -177,7 +177,7 @@
 
     <!-- Statistics Section (Optional) -->
     <section class="stats-section">
-      <h2>📊 Statistics</h2>
+      <h2>Statistics</h2>
       <div class="stats-grid">
         <div class="stat-item">
           <div class="stat-value" id="cleanedCount">0</div>

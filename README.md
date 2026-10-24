@@ -2,15 +2,14 @@
 
 Chrome extension that removes tracking parameters from URLs with a visual management interface.
 
-## v1.2: Retro Skeuomorphic UI
+## At a glance
 
-- **Amber VFD Display** - Vintage hardware aesthetic with glowing amber displays
-- **Interactive Popup** - Click the extension icon to open the interface
-- **Real-time Preview** - See before/after URL cleaning on authentic displays
-- **Physical Toggle Switches** - Realistic hardware-style switches
-- **Category Management** - Toggle tracking categories on/off
+- **Clean, readable popup** - Calm Braun-inspired design that follows your system's light or dark mode
+- **Real-time Preview** - See the URL before and after cleaning, and what was removed
+- **Site-aware cleaning** - Amazon links shortened, share IDs removed, redirect links unwrapped
+- **Category Management** - Switch tracking categories on/off
 - **Custom Parameters** - Add your own parameters to remove
-- **Usage Statistics** - Track cleaning activity on LED-style displays
+- **Usage Statistics** - Track how many links you've cleaned
 
 ## 🎯 Features
 
@@ -24,27 +23,25 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - Change it at `chrome://extensions/shortcuts`
 
 ### Visual Management
-- **Preview Interface**: See your URL before and after cleaning on VFD-style displays
+- **Preview Interface**: See your URL before and after cleaning
 - **What was removed**: A short list under the clean URL shows each removed parameter or redirect, and why (click to expand)
-- **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
-  - ST - Site-specific rules (Amazon, YouTube, X, Instagram, TikTok, Spotify, LinkedIn)
-  - RD - Unwrap redirect links (Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn, Steam)
-  - GA - Google Analytics (utm_*, gclid)
-  - FB - Facebook (fbclid, fb_*)
-  - MS - Microsoft/Bing (msclkid)
-  - SM - Social Media (Twitter, LinkedIn, TikTok, Instagram)
-  - EM - Email Marketing (Mailchimp, HubSpot)
-  - AZ - Amazon (ref, pf_rd_*, pd_rd_*)
-  - GN - Generic Tracking (sessionid, clickid, affiliate)
+- **Category Switches**: Enable/disable tracking categories:
+  - Site-specific rules (Amazon, YouTube, X, Instagram, TikTok, Spotify, LinkedIn)
+  - Unwrap redirect links (Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn, Steam)
+  - Google Analytics (utm_*, gclid)
+  - Facebook (fbclid, fb_*)
+  - Microsoft/Bing (msclkid)
+  - Social Media (Twitter, LinkedIn, TikTok, Instagram)
+  - Email Marketing (Mailchimp, HubSpot)
+  - Amazon (ref, pf_rd_*, pd_rd_*)
+  - Generic Tracking (sessionid, clickid, affiliate)
 - **Custom Parameters**: Add your own tracking parameters
-- **Statistics**: Track your cleaning activity on amber LED displays
+- **Statistics**: Track your cleaning activity
 
-### Design Aesthetic
-- **Skeuomorphic Interface**: Realistic hardware controls and displays
-- **Amber VFD Displays**: Vintage Vacuum Fluorescent Display aesthetic
-- **Brushed Metal Panels**: Industrial control panel look
-- **Physical Switches**: Authentic toggle switch animations
-- **Industrial Design**: Inspired by 1970s-80s audio equipment and hardware
+### Design
+- **Readable first**: Plain sentence-case labels, monospace URLs, and colours that meet WCAG AA contrast
+- **One accent**: A single orange for the Copy button and switches, like the indicator light on a Braun device
+- **Light and dark**: Follows your system setting automatically, with no theme button
 
 ## 🧹 Tracking Parameters Removed
 
@@ -112,8 +109,8 @@ We're working on publishing this extension to the Chrome Web Store for easier in
 
 ### Using the Popup Interface (Recommended)
 1. Click the extension icon in your toolbar
-2. View your current URL and its cleaned version on the amber VFD displays
-3. Customize which categories to clean using the physical toggle switches
+2. View your current URL, its cleaned version and what was removed
+3. Customize which categories to clean using the switches
 4. Click the orange "Copy Clean URL" button
 5. Add custom parameters if needed
 
@@ -154,13 +151,13 @@ https://example.com/article
 
 ## 🎨 Customization
 
-### Toggle Categories
-Open the popup and use the physical toggle switches to enable/disable specific tracking categories. Watch them slide with smooth animations! Your preferences are automatically saved.
+### Switch Categories
+Open the popup and use the switches to enable/disable specific tracking categories. Your preferences are saved automatically.
 
 ### Add Custom Parameters
 1. Open the popup
 2. Scroll to "Custom Parameters" section
-3. Type your parameter name in the amber display (e.g., `my_tracking_param`)
+3. Type your parameter name (e.g., `my_tracking_param`)
 4. Click "Add"
 5. The parameter will be removed from all future URLs
 
@@ -182,7 +179,7 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 - `cleaner.js` - Shared URL cleaning logic and tracking parameter lists
 - `background.js` - Context menu handling
 - `popup.html` - Popup interface structure
-- `popup.css` - Popup styling (skeuomorphic amber VFD theme)
+- `popup.css` - Popup styling (Braun-inspired, light and dark)
 - `popup.js` - Popup functionality
 - `icon16.png`, `icon48.png`, `icon128.png` - Extension icons
 - `tests/` - Tests for the URL cleaning logic (not included in the store package)
@@ -242,11 +239,11 @@ node --test
 ## 🎨 Design Inspiration
 
 The current UI is inspired by:
-- 1970s-80s VFD (Vacuum Fluorescent Display) technology
-- Vintage calculators and audio equipment
-- Industrial control panels
-- Classic analog hardware interfaces
-- Authentic skeuomorphic design principles
+- Dieter Rams' work at Braun and his principle "less, but better"
+- Warm off-white panels and a single orange indicator colour
+- Physical-feeling controls (a raised key, sliding switches) without decoration
+
+Earlier versions (up to 1.3) used a retro skeuomorphic design with amber VFD displays.
 
 ## 📄 License
 
@@ -261,6 +258,6 @@ If you find any bugs or have suggestions, please open an issue on GitHub.
 
 ---
 
-**Note**: This extension is inspired by the "Copy Clean Link" feature in Firefox, enhanced with visual management capabilities and a unique retro hardware aesthetic.
+**Note**: This extension is inspired by the "Copy Link Without Site Tracking" feature in Firefox, enhanced with site-aware cleaning, redirect unwrapping and visual management.
 
 Made for a cleaner, more private web. 🔗✨

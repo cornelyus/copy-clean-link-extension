@@ -1,4 +1,4 @@
-// categoryParams, STORAGE_KEYS and cleanURL come from cleaner.js
+// categoryParams, CATEGORIES, STORAGE_KEYS and cleanURL come from cleaner.js
 
 // Get current tab URL
 async function getCurrentTabUrl() {
@@ -15,7 +15,7 @@ async function loadSettings() {
   ]);
 
   return {
-    enabledCategories: result[STORAGE_KEYS.CATEGORIES] || Object.keys(categoryParams),
+    enabledCategories: result[STORAGE_KEYS.CATEGORIES] || CATEGORIES,
     customParams: result[STORAGE_KEYS.CUSTOM_PARAMS] || [],
     stats: result[STORAGE_KEYS.STATS] || { cleanedCount: 0, paramsRemoved: 0 }
   };
@@ -211,7 +211,7 @@ async function initialize() {
   document.getElementById('resetBtn').addEventListener('click', async () => {
     if (confirm('Reset all settings to defaults?')) {
       const defaultSettings = {
-        enabledCategories: Object.keys(categoryParams),
+        enabledCategories: CATEGORIES,
         customParams: [],
         stats: { cleanedCount: 0, paramsRemoved: 0 }
       };

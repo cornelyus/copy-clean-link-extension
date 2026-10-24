@@ -1,4 +1,4 @@
-// Shared categoryParams, STORAGE_KEYS and cleanURL
+// Shared categoryParams, CATEGORIES, STORAGE_KEYS and cleanURL
 importScripts('cleaner.js');
 
 // Cache for settings
@@ -17,7 +17,7 @@ async function loadSettings() {
   ]);
 
   cachedSettings = {
-    enabledCategories: result[STORAGE_KEYS.CATEGORIES] || Object.keys(categoryParams),
+    enabledCategories: result[STORAGE_KEYS.CATEGORIES] || CATEGORIES,
     customParams: result[STORAGE_KEYS.CUSTOM_PARAMS] || [],
     stats: result[STORAGE_KEYS.STATS] || { cleanedCount: 0, paramsRemoved: 0 }
   };
@@ -44,8 +44,40 @@ async function updateStats(removedCount) {
   cachedSettings = settings;
 }
 
-// Create context menu when the extension is installed
-chrome.runtime.onInstalled.addListener(() => {
+// Set up context menus and settings when the extension is installed or updated
+chrome.runtime.onInstalled.addListener(async () => {
+  createContextMenus();
+  await initializeSettings();
+});
+
+// Set defaults on first install, and turn on categories added in an update.
+// Categories the user turned off themselves stay off.
+async function initializeSettings() {
+  const result = await chrome.storage.local.get([
+    STORAGE_KEYS.CATEGORIES,
+    STORAGE_KEYS.KNOWN_CATEGORIES
+  ]);
+
+  if (!result[STORAGE_KEYS.CATEGORIES]) {
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.CATEGORIES]: CATEGORIES,
+      [STORAGE_KEYS.KNOWN_CATEGORIES]: CATEGORIES,
+      [STORAGE_KEYS.CUSTOM_PARAMS]: [],
+      [STORAGE_KEYS.STATS]: { cleanedCount: 0, paramsRemoved: 0 }
+    });
+    return;
+  }
+
+  await chrome.storage.local.set({
+    [STORAGE_KEYS.CATEGORIES]: enableNewCategories(
+      result[STORAGE_KEYS.CATEGORIES],
+      result[STORAGE_KEYS.KNOWN_CATEGORIES]
+    ),
+    [STORAGE_KEYS.KNOWN_CATEGORIES]: CATEGORIES
+  });
+}
+
+function createContextMenus() {
   // Menu for links
   chrome.contextMenus.create({
     id: 'copyCleanLink',
@@ -66,7 +98,7 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Open Clean Link',
     contexts: ['link']
   });
-});
+}
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -147,19 +179,5 @@ async function copyToClipboard(text, tabId) {
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local') {
     cachedSettings = null;
-  }
-});
-
-// Initialize default settings on install
-chrome.runtime.onInstalled.addListener(async () => {
-  const result = await chrome.storage.local.get([STORAGE_KEYS.CATEGORIES]);
-  
-  // Set default categories if not already set
-  if (!result[STORAGE_KEYS.CATEGORIES]) {
-    await chrome.storage.local.set({
-      [STORAGE_KEYS.CATEGORIES]: Object.keys(categoryParams),
-      [STORAGE_KEYS.CUSTOM_PARAMS]: [],
-      [STORAGE_KEYS.STATS]: { cleanedCount: 0, paramsRemoved: 0 }
-    });
   }
 });

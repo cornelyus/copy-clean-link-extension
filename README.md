@@ -26,6 +26,7 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 ### Visual Management
 - **Preview Interface**: See your URL before and after cleaning on VFD-style displays
 - **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
+  - ST - Site-specific rules (Amazon, YouTube, X, Instagram, TikTok, Spotify, LinkedIn)
   - GA - Google Analytics (utm_*, gclid)
   - FB - Facebook (fbclid, fb_*)
   - MS - Microsoft/Bing (msclkid)
@@ -60,6 +61,17 @@ The extension automatically removes parameters from:
 - **Affiliate**: affid, affiliate, aff_id, aff_sub, zanpid, kclickid, aclk
 - **Generic**: cvid, oicd, clickid, src, source, pcrid, pmt, pkw, ncid, sr_share
 - And many others...
+
+### Site-specific rules
+
+Some parameters are only tracking on certain sites (for example `t` is a share ID on X but a timestamp on YouTube), so these are removed only on the site they belong to:
+- **Amazon**: product links are shortened to `amazon.<tld>/dp/<product ID>`; other pages lose ref, pf_rd_*, pd_rd_*, crid, sprefix, qid, sr and similar
+- **YouTube**: si, is, pp, feature (video, time and playlist are kept)
+- **X/Twitter**: s, t
+- **Instagram**: igsh, igshid
+- **TikTok**: _r, _t, is_from_webapp, sender_device, share and sender IDs
+- **Spotify**: si, context
+- **LinkedIn**: trk, trackingId, refId, lipi, email tracking IDs
 
 ## 📦 How to Install
 

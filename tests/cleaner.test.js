@@ -1,7 +1,7 @@
 // Run from the repo root with: node --test
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { cleanURL, enableNewCategories, CATEGORIES } = require('../cleaner.js');
+const { cleanURL, enableNewCategories, formatForCopy, CATEGORIES } = require('../cleaner.js');
 
 const ALL = CATEGORIES;
 const WITHOUT_GOOGLE = ALL.filter(c => c !== 'google');
@@ -219,4 +219,33 @@ test('migration: turns on only the categories added since the last known list', 
 test('migration: keeps categories the user turned off', () => {
   // sites is already known, so it stays off
   assert.deepEqual(enableNewCategories(['google'], CATEGORIES), ['google']);
+});
+
+// Copy formats
+
+test('plain format copies only the URL', () => {
+  assert.equal(formatForCopy('https://example.com/', 'Example', 'plain'), 'https://example.com/');
+});
+
+test('markdown format makes a link with the title', () => {
+  assert.equal(formatForCopy('https://example.com/a', 'Example Page', 'markdown'), '[Example Page](https://example.com/a)');
+});
+
+test('markdown escapes brackets in the title and parentheses in the URL', () => {
+  assert.equal(
+    formatForCopy('https://en.wikipedia.org/wiki/Foo_(bar)', 'Foo [bar] \\ baz', 'markdown'),
+    '[Foo \\[bar\\] \\\\ baz](https://en.wikipedia.org/wiki/Foo_%28bar%29)'
+  );
+});
+
+test('markdown without a title uses the URL as link text', () => {
+  assert.equal(formatForCopy('https://example.com/', '', 'markdown'), '[https://example.com/](https://example.com/)');
+});
+
+test('title-url format puts the title above the URL', () => {
+  assert.equal(formatForCopy('https://example.com/', '  Example\n  Page ', 'title-url'), 'Example Page\nhttps://example.com/');
+});
+
+test('title-url without a title copies only the URL', () => {
+  assert.equal(formatForCopy('https://example.com/', undefined, 'title-url'), 'https://example.com/');
 });

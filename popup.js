@@ -1,9 +1,28 @@
-// categoryParams, CATEGORIES, STORAGE_KEYS and cleanURL come from cleaner.js
+// categoryParams, CATEGORIES, STORAGE_KEYS, cleanURL and formatForCopy come from cleaner.js
+
+// Get current tab
+async function getCurrentTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tab;
+}
 
 // Get current tab URL
 async function getCurrentTabUrl() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  return tab?.url || '';
+  return (await getCurrentTab())?.url || '';
+}
+
+// Load and save the copy format
+async function loadCopyFormat() {
+  const result = await chrome.storage.local.get(STORAGE_KEYS.COPY_FORMAT);
+  return result[STORAGE_KEYS.COPY_FORMAT] || DEFAULT_COPY_FORMAT;
+}
+
+async function initializeCopyFormat() {
+  const select = document.getElementById('copyFormat');
+  select.value = await loadCopyFormat();
+  select.addEventListener('change', () => {
+    chrome.storage.local.set({ [STORAGE_KEYS.COPY_FORMAT]: select.value });
+  });
 }
 
 // Load settings from storage
@@ -165,19 +184,23 @@ async function initialize() {
   // Show keyboard shortcut
   await renderShortcutHint();
 
+  // Copy format selector
+  await initializeCopyFormat();
+
   // Event: Copy button
   document.getElementById('copyBtn').addEventListener('click', async () => {
-    const originalUrl = await getCurrentTabUrl();
+    const tab = await getCurrentTab();
     const settings = await loadSettings();
-    
+
     const { url: cleanedUrl, removedCount } = cleanURL(
-      originalUrl,
+      tab?.url || '',
       settings.enabledCategories,
       settings.customParams
     );
 
-    // Copy to clipboard
-    await navigator.clipboard.writeText(cleanedUrl);
+    // Copy to clipboard in the chosen format
+    const copyFormat = document.getElementById('copyFormat').value;
+    await navigator.clipboard.writeText(formatForCopy(cleanedUrl, tab?.title, copyFormat));
 
     // Update stats
     settings.stats.cleanedCount++;
@@ -252,6 +275,8 @@ async function initialize() {
       };
 
       await saveSettings(defaultSettings);
+      await chrome.storage.local.set({ [STORAGE_KEYS.COPY_FORMAT]: DEFAULT_COPY_FORMAT });
+      document.getElementById('copyFormat').value = DEFAULT_COPY_FORMAT;
       await initializeCheckboxes();
       renderCustomParams(defaultSettings.customParams);
       updateStatsDisplay(defaultSettings.stats);

@@ -185,8 +185,28 @@ const STORAGE_KEYS = {
   CATEGORIES: 'enabledCategories',
   KNOWN_CATEGORIES: 'knownCategories',
   CUSTOM_PARAMS: 'customParams',
-  STATS: 'stats'
+  STATS: 'stats',
+  COPY_FORMAT: 'copyFormat'
 };
+
+// How copied links are written: 'plain', 'markdown' or 'title-url'
+const DEFAULT_COPY_FORMAT = 'plain';
+
+// Format a clean URL for the clipboard. Without a title, markdown uses the URL as
+// link text and title-url falls back to the plain URL.
+function formatForCopy(url, title, format) {
+  const text = (title || '').replace(/\s+/g, ' ').trim();
+
+  if (format === 'markdown') {
+    const linkText = (text || url).replace(/[\\[\]]/g, '\\$&');
+    const target = url.replace(/\(/g, '%28').replace(/\)/g, '%29');
+    return `[${linkText}](${target})`;
+  }
+  if (format === 'title-url' && text) {
+    return `${text}\n${url}`;
+  }
+  return url;
+}
 
 function hostMatches(host, domains) {
   return domains.some(domain => host === domain || host.endsWith('.' + domain));
@@ -319,5 +339,8 @@ function cleanURL(url, enabledCategories, customParams) {
 
 // Export for Node tests (module is undefined in the extension)
 if (typeof module !== 'undefined') {
-  module.exports = { cleanURL, enableNewCategories, categoryParams, siteRules, redirectRules, CATEGORIES, STORAGE_KEYS };
+  module.exports = {
+    cleanURL, enableNewCategories, formatForCopy,
+    categoryParams, siteRules, redirectRules, CATEGORIES, STORAGE_KEYS
+  };
 }

@@ -1,4 +1,4 @@
-// Shared categoryParams, CATEGORIES, STORAGE_KEYS and cleanURL
+// Shared categoryParams, CATEGORIES, STORAGE_KEYS, cleanURL and formatForCopy
 importScripts('cleaner.js');
 
 // Cache for settings
@@ -13,13 +13,15 @@ async function loadSettings() {
   const result = await chrome.storage.local.get([
     STORAGE_KEYS.CATEGORIES,
     STORAGE_KEYS.CUSTOM_PARAMS,
-    STORAGE_KEYS.STATS
+    STORAGE_KEYS.STATS,
+    STORAGE_KEYS.COPY_FORMAT
   ]);
 
   cachedSettings = {
     enabledCategories: result[STORAGE_KEYS.CATEGORIES] || CATEGORIES,
     customParams: result[STORAGE_KEYS.CUSTOM_PARAMS] || [],
-    stats: result[STORAGE_KEYS.STATS] || { cleanedCount: 0, paramsRemoved: 0 }
+    stats: result[STORAGE_KEYS.STATS] || { cleanedCount: 0, paramsRemoved: 0 },
+    copyFormat: result[STORAGE_KEYS.COPY_FORMAT] || DEFAULT_COPY_FORMAT
   };
 
   return cachedSettings;
@@ -121,10 +123,32 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const { url: cleanedURL, removedCount } = await cleanURLWithSettings(urlToClean);
     chrome.tabs.create({ url: cleanedURL, active: false });
     await updateStats(removedCount);
+  } else if (info.menuItemId === 'copyCleanLink') {
+    // The title is the link's text, looked up only when the copy format needs it
+    const getTitle = async () => info.linkText || info.selectionText || getLinkText(tab.id, info.frameId, info.linkUrl);
+    await cleanAndCopy(urlToClean, tab.id, getTitle);
   } else {
-    await cleanAndCopy(urlToClean, tab.id);
+    await cleanAndCopy(urlToClean, tab.id, async () => tab.title);
   }
 });
+
+// Find the visible text of the clicked link. Chrome doesn't pass it to context menu
+// handlers, so look for a link with the same address in the frame that was clicked.
+async function getLinkText(tabId, frameId, linkUrl) {
+  try {
+    const [injection] = await chrome.scripting.executeScript({
+      target: { tabId, frameIds: [frameId || 0] },
+      func: (href) => {
+        const link = Array.from(document.links).find(a => a.href === href);
+        return link ? (link.innerText || link.title || link.getAttribute('aria-label') || '') : '';
+      },
+      args: [linkUrl]
+    });
+    return injection?.result || '';
+  } catch (error) {
+    return '';
+  }
+}
 
 // Handle keyboard shortcuts
 chrome.commands.onCommand.addListener(async (command, tab) => {
@@ -135,14 +159,17 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
   // tab is not always passed, so fall back to the active tab
   const activeTab = tab || (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
   if (activeTab?.url) {
-    await cleanAndCopy(activeTab.url, activeTab.id);
+    await cleanAndCopy(activeTab.url, activeTab.id, async () => activeTab.title);
   }
 });
 
-// Clean a URL, copy it and show the result on the toolbar badge
-async function cleanAndCopy(url, tabId) {
+// Clean a URL, copy it in the chosen format and show the result on the toolbar badge.
+// getTitle is only called when the format uses a title.
+async function cleanAndCopy(url, tabId, getTitle) {
   const { url: cleanedURL, removedCount } = await cleanURLWithSettings(url);
-  const copied = await copyToClipboard(cleanedURL, tabId);
+  const { copyFormat } = await loadSettings();
+  const title = copyFormat === 'plain' ? '' : await getTitle();
+  const copied = await copyToClipboard(formatForCopy(cleanedURL, title, copyFormat), tabId);
 
   if (copied) {
     await updateStats(removedCount);

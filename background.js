@@ -80,38 +80,66 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     urlToClean = info.pageUrl;
   }
 
-  if (urlToClean) {
-    const { url: cleanedURL, removedCount } = await cleanURLWithSettings(urlToClean);
+  if (!urlToClean) {
+    return;
+  }
 
-    // If opening clean link directly
-    if (info.menuItemId === 'openCleanLink') {
-      chrome.tabs.create({ url: cleanedURL, active: false });
-      await updateStats(removedCount);
-    } else {
-      // Copy to clipboard
-      await copyToClipboard(cleanedURL, tab.id);
-      await updateStats(removedCount);
-    }
+  // If opening clean link directly
+  if (info.menuItemId === 'openCleanLink') {
+    const { url: cleanedURL, removedCount } = await cleanURLWithSettings(urlToClean);
+    chrome.tabs.create({ url: cleanedURL, active: false });
+    await updateStats(removedCount);
+  } else {
+    await cleanAndCopy(urlToClean, tab.id);
   }
 });
 
-// Function to copy text to clipboard
+// Handle keyboard shortcuts
+chrome.commands.onCommand.addListener(async (command, tab) => {
+  if (command !== 'copy-clean-url') {
+    return;
+  }
+
+  // tab is not always passed, so fall back to the active tab
+  const activeTab = tab || (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+  if (activeTab?.url) {
+    await cleanAndCopy(activeTab.url, activeTab.id);
+  }
+});
+
+// Clean a URL, copy it and show the result on the toolbar badge
+async function cleanAndCopy(url, tabId) {
+  const { url: cleanedURL, removedCount } = await cleanURLWithSettings(url);
+  const copied = await copyToClipboard(cleanedURL, tabId);
+
+  if (copied) {
+    await updateStats(removedCount);
+  }
+  showBadge(tabId, copied);
+}
+
+// Briefly show ✓ or ✕ on the toolbar icon
+function showBadge(tabId, success) {
+  chrome.action.setBadgeBackgroundColor({ tabId, color: success ? '#2e7d32' : '#c62828' });
+  chrome.action.setBadgeText({ tabId, text: success ? '✓' : '✕' });
+  setTimeout(() => chrome.action.setBadgeText({ tabId, text: '' }), 1500);
+}
+
+// Function to copy text to clipboard, returns true on success
 async function copyToClipboard(text, tabId) {
   // Inject script into the active tab to copy
   try {
-    await chrome.scripting.executeScript({
+    const [injection] = await chrome.scripting.executeScript({
       target: { tabId: tabId },
-      func: (textToCopy) => {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          console.log('Clean URL copied:', textToCopy);
-        }).catch(err => {
-          console.error('Error copying:', err);
-        });
-      },
+      func: (textToCopy) => navigator.clipboard.writeText(textToCopy).then(() => true, () => false),
       args: [text]
     });
+    return injection?.result === true;
   } catch (error) {
-    console.error('Error injecting script:', error);
+    // Injection is blocked on chrome:// pages and the Chrome Web Store.
+    // Expected, and shown to the user as ✕ on the badge, so not logged as an error
+    console.info('Cannot copy on this page:', error.message);
+    return false;
   }
 }
 

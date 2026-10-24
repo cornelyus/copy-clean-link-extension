@@ -149,8 +149,17 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 - `popup.css` - Popup styling (skeuomorphic amber VFD theme)
 - `popup.js` - Popup functionality
 - `icon16.png`, `icon48.png`, `icon128.png` - Extension icons
+- `tests/` - Tests for the URL cleaning logic (not included in the store package)
 - `README.md` - This file
 - `PRIVACY_POLICY.md` - Privacy policy
+
+### Running the tests
+
+Requires Node.js 18 or later, with no dependencies to install:
+
+```sh
+node --test
+```
 
 ## 📊 What's New
 

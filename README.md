@@ -174,7 +174,7 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 - It does not collect personal information
 - All settings are stored locally in your browser
 - Open source - you can view all the code
-- See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for full details
+- See [PRIVACY-POLICY.md](PRIVACY-POLICY.md) for full details
 
 ## 🛠️ Extension Files
 
@@ -187,7 +187,7 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 - `icon16.png`, `icon48.png`, `icon128.png` - Extension icons
 - `tests/` - Tests for the URL cleaning logic (not included in the store package)
 - `README.md` - This file
-- `PRIVACY_POLICY.md` - Privacy policy
+- `PRIVACY-POLICY.md` - Privacy policy
 
 ### Running the tests
 
@@ -199,7 +199,17 @@ node --test
 
 ## 📊 What's New
 
-### Version 1.2.1 (Current)
+### Version 1.3.0 (Current): Share-safe links
+- **Site-specific rules**: Amazon product links shortened to `/dp/<ID>`; share and sender IDs removed on YouTube, X, Instagram, TikTok, Spotify and LinkedIn
+- **Redirect unwrapping**: Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn and Steam redirect links are replaced by their real destination
+- **What was removed**: the popup lists each removed parameter or redirect and why
+- **Keyboard shortcut**: Alt+Shift+C copies the clean URL of the current tab
+- ✓/✕ on the toolbar icon confirms right-click and shortcut copies
+- New categories are turned on automatically for existing users; categories you turned off stay off
+- Fixed: stats counted copies that failed
+- Fixed: custom parameter names are shown as plain text
+
+### Version 1.2.1
 - Fixed: the popup now removes all `utm_*` parameters, matching the context menu
 - `utm_*` parameters are only removed when the Google Analytics category is enabled, as its label says
 - Fixed: "Could not establish connection" error when changing settings in the popup

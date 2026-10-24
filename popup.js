@@ -36,7 +36,7 @@ async function updatePreview() {
   const originalUrl = await getCurrentTabUrl();
   const settings = await loadSettings();
   
-  const { url: cleanedUrl, removedCount } = cleanURL(
+  const { url: cleanedUrl, removedCount, removed } = cleanURL(
     originalUrl,
     settings.enabledCategories,
     settings.customParams
@@ -44,6 +44,7 @@ async function updatePreview() {
 
   document.getElementById('originalUrl').textContent = originalUrl || 'No URL available';
   document.getElementById('cleanUrl').textContent = cleanedUrl || 'No URL available';
+  renderRemoved(removed);
 
   // Update copy button state
   const copyBtn = document.getElementById('copyBtn');
@@ -54,8 +55,40 @@ async function updatePreview() {
   } else {
     copyBtn.style.opacity = '1';
     copyBtn.style.cursor = 'pointer';
-    document.getElementById('copyBtnText').textContent = `📋 Copy Clean URL (${removedCount} params)`;
+    document.getElementById('copyBtnText').textContent = `📋 Copy Clean URL (${removedCount} removed)`;
   }
+}
+
+// Number of names shown in the collapsed summary
+const SUMMARY_NAMES = 3;
+
+// Show what was removed and why, collapsed by default.
+// Names come from the URL, so only textContent is used.
+function renderRemoved(removed) {
+  const details = document.getElementById('removedDetails');
+  const list = document.getElementById('removedList');
+  list.replaceChildren();
+
+  if (removed.length === 0) {
+    details.hidden = true;
+    return;
+  }
+
+  const names = removed.map(item => item.param);
+  const shown = names.slice(0, SUMMARY_NAMES).join(', ');
+  const more = names.length > SUMMARY_NAMES ? ` +${names.length - SUMMARY_NAMES}` : '';
+  document.getElementById('removedSummary').textContent = `${removed.length} removed: ${shown}${more}`;
+
+  removed.forEach(({ param, reason }) => {
+    const item = document.createElement('li');
+    const name = document.createElement('span');
+    name.className = 'param-name';
+    name.textContent = param;
+    item.append(name, reason || 'Tracking parameter');
+    list.appendChild(item);
+  });
+
+  details.hidden = false;
 }
 
 // Update statistics display
@@ -77,28 +110,30 @@ async function initializeCheckboxes() {
 // Render custom parameters
 function renderCustomParams(customParams) {
   const container = document.getElementById('customParamsList');
-  container.innerHTML = '';
+  container.replaceChildren();
 
   customParams.forEach(param => {
     const tag = document.createElement('div');
     tag.className = 'custom-param-tag';
-    tag.innerHTML = `
-      <span>${param}</span>
-      <button class="remove-param" data-param="${param}">✕</button>
-    `;
-    container.appendChild(tag);
-  });
 
-  // Add event listeners to remove buttons
-  container.querySelectorAll('.remove-param').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const param = btn.dataset.param;
+    // Built with textContent so a param name can't inject HTML
+    const name = document.createElement('span');
+    name.textContent = param;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-param';
+    removeBtn.textContent = '✕';
+    removeBtn.setAttribute('aria-label', `Remove ${param}`);
+    removeBtn.addEventListener('click', async () => {
       const settings = await loadSettings();
       settings.customParams = settings.customParams.filter(p => p !== param);
       await saveSettings(settings);
       renderCustomParams(settings.customParams);
       await updatePreview();
     });
+
+    tag.append(name, removeBtn);
+    container.appendChild(tag);
   });
 }
 

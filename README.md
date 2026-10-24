@@ -25,6 +25,7 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 
 ### Visual Management
 - **Preview Interface**: See your URL before and after cleaning on VFD-style displays
+- **What was removed**: A short list under the clean URL shows each removed parameter or redirect, and why (click to expand)
 - **Category Toggles**: Enable/disable tracking categories with physical toggle switches:
   - ST - Site-specific rules (Amazon, YouTube, X, Instagram, TikTok, Spotify, LinkedIn)
   - RD - Unwrap redirect links (Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn, Steam)

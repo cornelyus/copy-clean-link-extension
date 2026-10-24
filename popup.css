@@ -189,6 +189,63 @@ header h1::before {
   z-index: 1;
 }
 
+/* What was removed, and why */
+.removed-details {
+  margin: -4px 0 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #c9a24a;
+}
+
+.removed-details summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 4px 2px;
+  word-break: break-word;
+}
+
+.removed-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.removed-details summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 0.15s ease;
+}
+
+.removed-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.removed-details summary:focus-visible {
+  outline: 1px solid #ffbb33;
+  outline-offset: 2px;
+}
+
+.removed-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.removed-list li {
+  padding: 3px 0;
+  color: #999;
+  line-height: 1.4;
+}
+
+.removed-list .param-name {
+  color: #ffcc44;
+  margin-right: 6px;
+}
+
 .arrow {
   text-align: center;
   font-size: 20px;

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- Chrome Web Store promo tiles.
+     ?size=small   440×280 small promo tile
+     ?size=marquee 1400×560 marquee promo tile (adds the real popup on the right) -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Store promo tile</title>
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --panel: #ffffff;
+    --text: #1d1c1a;
+    --muted: #5e5a53;
+    --faint: #6f6a62;
+    --line: #dcd8d0;
+    --accent: #c2410c;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    overflow: hidden;
+  }
+  .name {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .name::before {
+    content: "";
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .tagline { color: var(--muted); }
+  .urls {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-family: var(--mono);
+  }
+  .urls div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .before { color: var(--text); }
+  .tracking { color: var(--faint); text-decoration: line-through; text-decoration-color: var(--accent); }
+  .arrow { color: var(--faint); font-family: var(--font); }
+
+  /* 440×280 */
+  body.small {
+    width: 440px;
+    height: 280px;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .small .name { font-size: 30px; gap: 12px; }
+  .small .name::before { width: 14px; height: 14px; }
+  .small .tagline { font-size: 17px; margin: 8px 0 22px 26px; }
+  .small .urls { font-size: 13px; padding: 12px 14px; line-height: 1.5; }
+  .small .arrow { font-size: 12px; margin: 2px 0; }
+  .small .frame { display: none; }
+
+  /* 1400×560 */
+  body.marquee {
+    width: 1400px;
+    height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 110px;
+  }
+  .marquee .text { width: 640px; }
+  .marquee .name { font-size: 64px; gap: 22px; }
+  .marquee .name::before { width: 24px; height: 24px; }
+  .marquee .tagline { font-size: 30px; margin: 12px 0 40px 46px; }
+  .marquee .urls { font-size: 19px; padding: 18px 22px; line-height: 1.55; }
+  .marquee .arrow { font-size: 18px; margin: 4px 0; }
+  .marquee .frame {
+    height: 560px;
+    padding-top: 60px;
+    align-self: flex-start;
+    line-height: 0;
+  }
+  .marquee iframe {
+    border: 0;
+    width: 400px;
+    height: 600px;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 18px 40px rgba(0, 0, 0, 0.18);
+  }
+</style>
+</head>
+<body>
+  <div class="text">
+    <div class="name">Copy Clean Link</div>
+    <p class="tagline">Share links, not your data.</p>
+    <div class="urls">
+      <div class="before">example.com/article<span class="tracking">?utm_source=newsletter&amp;fbclid=IwAR0xyz&amp;gclid=Cj0K</span></div>
+      <div class="arrow">↓</div>
+      <div>example.com/article</div>
+    </div>
+  </div>
+  <div class="frame"></div>
+<script>
+  const size = new URLSearchParams(location.search).get('size') || 'small';
+  document.body.classList.add(size);
+  if (size === 'marquee') {
+    const iframe = document.createElement('iframe');
+    const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&si=Ab3dEf9GhIj&utm_source=newsletter&fbclid=IwAR0xyz';
+    iframe.src = `../build/popup.html?url=${encodeURIComponent(url)}`;
+    document.querySelector('.frame').appendChild(iframe);
+  }
+</script>
+</body>
+</html>

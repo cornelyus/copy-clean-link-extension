@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!-- Chrome Web Store screenshot, 1280×800: caption on the left, real popup on the right.
+     Query parameters:
+       title, sub   caption text
+       theme        light (default) or dark
+       h            height of the popup frame in CSS px (before scaling)
+       img          optional image to show instead of the popup (e.g. a context menu capture)
+       any other    passed to the popup (url, open, off, scroll; see ../stub.js) -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Store screenshot</title>
+<style>
+  :root {
+    --bg: #e8e4dc;
+    --text: #1d1c1a;
+    --muted: #5e5a53;
+    --accent: #c2410c;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  body.dark {
+    --bg: #121110;
+    --text: #f0ede6;
+    --muted: #b0aa9f;
+    --accent: #f08a4b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 96px;
+  }
+  .caption { width: 560px; }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .brand::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  h1 {
+    font-size: 54px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+  }
+  .sub {
+    font-size: 24px;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .frame {
+    transform: scale(1.25);
+    transform-origin: center;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 18px 40px rgba(0, 0, 0, 0.18);
+    margin-right: 50px;
+    line-height: 0;
+  }
+  iframe { border: 0; width: 400px; }
+  .frame img { max-width: 480px; max-height: 560px; }
+</style>
+</head>
+<body>
+  <div class="caption">
+    <div class="brand">Copy Clean Link</div>
+    <h1 id="title"></h1>
+    <p class="sub" id="sub"></p>
+  </div>
+  <div class="frame" id="frame"></div>
+<script>
+  const params = new URLSearchParams(location.search);
+  const theme = params.get('theme') || 'light';
+  document.body.classList.toggle('dark', theme === 'dark');
+  document.getElementById('title').textContent = params.get('title') || '';
+  document.getElementById('sub').textContent = params.get('sub') || '';
+
+  const frame = document.getElementById('frame');
+  if (params.get('img')) {
+    const img = document.createElement('img');
+    img.src = params.get('img');
+    frame.appendChild(img);
+  } else {
+    const popupParams = new URLSearchParams(params);
+    ['title', 'sub', 'theme', 'h', 'img'].forEach(key => popupParams.delete(key));
+    const iframe = document.createElement('iframe');
+    iframe.style.height = (params.get('h') || 580) + 'px';
+    iframe.src = `../build/popup${theme === 'dark' ? '-dark' : ''}.html?${popupParams}`;
+    frame.appendChild(iframe);
+  }
+</script>
+</body>
+</html>

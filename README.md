@@ -187,6 +187,7 @@ Click "Reset to Defaults" at the bottom of the popup to restore all original set
 - `popup.js` - Popup functionality
 - `icon16.png`, `icon48.png`, `icon128.png` - Extension icons
 - `tests/` - Tests for the URL cleaning logic (not included in the store package)
+- `store-assets/` - Chrome Web Store screenshots, promo tiles and listing text, with the script that renders them (not included in the store package)
 - `README.md` - This file
 - `PRIVACY-POLICY.md` - Privacy policy
 

@@ -2,6 +2,8 @@
 
 Chrome extension that removes tracking parameters from URLs with a visual management interface.
 
+**[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/copy-clean-link-remove-ur/jimbfjhnmbojbhihalhngfkcbmgnjafa)**
+
 ## At a glance
 
 - **Clean, readable popup** - Calm Braun-inspired design that follows your system's light or dark mode
@@ -59,7 +61,7 @@ The extension automatically removes parameters from:
 - **Session Tracking**: sessionid, session_id, sid
 - **Affiliate**: affid, affiliate, aff_id, aff_sub, zanpid, kclickid, aclk
 - **Generic**: cvid, oicd, clickid, src, source, pcrid, pmt, pkw, ncid, sr_share
-- And many others...
+- Plus any custom parameters you add
 
 ### Site-specific rules
 
@@ -87,9 +89,15 @@ Only `http` and `https` destinations are used. Anything else leaves the link as 
 
 ## 📦 How to Install
 
-### Method 1: Manual Installation (Developer Mode)
+### Method 1: Chrome Web Store (Recommended)
 
-1. **Download all files** of this extension into a folder on your computer
+1. Open **[Copy Clean Link on the Chrome Web Store](https://chromewebstore.google.com/detail/copy-clean-link-remove-ur/jimbfjhnmbojbhihalhngfkcbmgnjafa)**
+2. Click **Add to Chrome**
+3. Done! Updates are installed automatically
+
+### Method 2: Manual Installation (for development)
+
+1. **Get the code**: clone this repository, or on GitHub click **Code → Download ZIP** (or download a release tag) and unzip it
 
 2. **Open Chrome** and go to `chrome://extensions/`
 
@@ -97,13 +105,9 @@ Only `http` and `https` destinations are used. Anything else leaves the link as 
 
 4. **Click on "Load unpacked"**
 
-5. **Select the folder** where you saved the extension files
+5. **Select the folder** that contains `manifest.json`
 
-6. **Done!** The extension is installed and ready to use
-
-### Method 2: Chrome Web Store (Coming Soon)
-
-We're working on publishing this extension to the Chrome Web Store for easier installation.
+6. **Done!** The extension is installed. After changing the code, click the reload icon on its card
 
 ## 🚀 How to Use
 
@@ -162,7 +166,7 @@ Open the popup and use the switches to enable/disable specific tracking categori
 5. The parameter will be removed from all future URLs
 
 ### Reset to Defaults
-Click the red "Reset to Defaults" button in the popup to restore all original settings.
+Click "Reset to Defaults" at the bottom of the popup to restore all original settings and reset the statistics.
 
 ## 🔒 Privacy
 
@@ -177,7 +181,7 @@ Click the red "Reset to Defaults" button in the popup to restore all original se
 
 - `manifest.json` - Extension configuration
 - `cleaner.js` - Shared URL cleaning logic and tracking parameter lists
-- `background.js` - Context menu handling
+- `background.js` - Context menus, keyboard shortcut, toolbar badge, and settings on install/update
 - `popup.html` - Popup interface structure
 - `popup.css` - Popup styling (Braun-inspired, light and dark)
 - `popup.js` - Popup functionality

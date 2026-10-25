@@ -1,6 +1,6 @@
 # Privacy Policy for Copy Clean Link
 
-**Last Updated:** January 22, 2026
+**Last Updated:** October 25, 2026
 
 ## Overview
 
@@ -19,6 +19,7 @@ The extension stores the following information **locally on your device only** u
 1. **User Preferences**
    - Which tracking parameter categories you have enabled (Google, Facebook, Microsoft, etc.)
    - Custom tracking parameters you have added
+   - Which categories existed the last time the extension was updated, so that categories added in an update can be switched on while the ones you turned off stay off
 
 2. **Usage Statistics**
    - A simple counter of how many URLs you have cleaned
@@ -37,10 +38,12 @@ The extension requires certain browser permissions to function:
 
 - **contextMenus**: To add "Copy Clean Link" option to right-click menus
 - **clipboardWrite**: To copy cleaned URLs to your clipboard
-- **scripting**: To enable clipboard functionality in web pages
+- **scripting**: To write the cleaned URL to the clipboard from the page you're on (used by the right-click menu and the keyboard shortcut)
 - **tabs**: To access the current tab's URL for cleaning
 - **storage**: To save your preferences locally on your device
 - **host_permissions (<all_urls>)**: To allow URL cleaning on any website you visit
+
+The keyboard shortcut (Alt+Shift+C) and the ✓/✕ confirmation on the toolbar icon need no additional permissions.
 
 **Important:** These permissions are used solely for the extension's core functionality and not for data collection.
 
@@ -52,7 +55,9 @@ The extension requires certain browser permissions to function:
    - Provides you with the cleaned URL
    - **Does not store or transmit the original or cleaned URLs**
 
-2. **Local Statistics**: The extension keeps a count of:
+2. **Redirect Links**: Some sites (such as Google, Facebook and Outlook Safe Links) send links through their own redirect page. The extension unwraps these by reading the destination that is already written inside the link. It does not visit the redirect page or the destination, and makes no network requests.
+
+3. **Local Statistics**: The extension keeps a count of:
    - How many times you've used the cleaning feature
    - How many tracking parameters have been removed in total
    - These are simple numbers, not actual URL data
@@ -78,6 +83,10 @@ There is minimal security risk. Your data remains on your device under your cont
 ## Changes to This Policy
 
 If we make changes to this privacy policy, we will update the "Last Updated" date at the top of this document. Continued use of the extension after changes constitutes acceptance of the updated policy.
+
+## Contact
+
+Questions about this policy or the extension can be asked by opening an issue at [github.com/cornelyus/copy-clean-link-extension/issues](https://github.com/cornelyus/copy-clean-link-extension/issues).
 
 ## Compliance
 

@@ -48,15 +48,11 @@ async function updatePreview() {
 
   // Update copy button state
   const copyBtn = document.getElementById('copyBtn');
-  if (originalUrl === cleanedUrl) {
-    copyBtn.style.opacity = '0.6';
-    copyBtn.style.cursor = 'not-allowed';
-    document.getElementById('copyBtnText').textContent = '✓ Already Clean';
-  } else {
-    copyBtn.style.opacity = '1';
-    copyBtn.style.cursor = 'pointer';
-    document.getElementById('copyBtnText').textContent = `📋 Copy Clean URL (${removedCount} removed)`;
-  }
+  const isClean = originalUrl === cleanedUrl;
+  copyBtn.classList.toggle('is-clean', isClean);
+  document.getElementById('copyBtnText').textContent = isClean
+    ? '✓ Already Clean'
+    : `Copy Clean URL (${removedCount} removed)`;
 }
 
 // Number of names shown in the collapsed summary

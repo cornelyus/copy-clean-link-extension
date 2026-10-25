@@ -13,7 +13,7 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - **Custom Parameters** - Add your own parameters to remove
 - **Usage Statistics** - Track how many links you've cleaned
 
-## 🎯 Features
+## Features
 
 ### Context Menu Options
 - **Copy Clean Link**: Right-click on any link and select "Copy Clean Link" to copy the URL without tracking parameters
@@ -45,7 +45,7 @@ Chrome extension that removes tracking parameters from URLs with a visual manage
 - **One accent**: A single orange for the Copy button and switches, like the indicator light on a Braun device
 - **Light and dark**: Follows your system setting automatically, with no theme button
 
-## 🧹 Tracking Parameters Removed
+## Tracking Parameters Removed
 
 The extension automatically removes parameters from:
 - **Google Analytics**: utm_source, utm_medium, utm_campaign, utm_term, utm_content, _ga, _gl
@@ -87,7 +87,7 @@ Many sites send links through their own redirect page, which records the click. 
 
 Only `http` and `https` destinations are used. Anything else leaves the link as it is.
 
-## 📦 How to Install
+## How to Install
 
 ### Method 1: Chrome Web Store (Recommended)
 
@@ -109,7 +109,7 @@ Only `http` and `https` destinations are used. Anything else leaves the link as 
 
 6. **Done!** The extension is installed. After changing the code, click the reload icon on its card
 
-## 🚀 How to Use
+## How to Use
 
 ### Using the Popup Interface (Recommended)
 1. Click the extension icon in your toolbar
@@ -139,7 +139,7 @@ Only `http` and `https` destinations are used. Anything else leaves the link as 
 2. Select "Open Clean Link"
 3. The clean link is opened in a new background tab
 
-## 📝 Example
+## Example
 
 **Original URL:**
 ```
@@ -153,7 +153,7 @@ https://example.com/article
 
 **Removed Parameters:** 4 (utm_source, utm_medium, fbclid, utm_campaign)
 
-## 🎨 Customization
+## Customization
 
 ### Switch Categories
 Open the popup and use the switches to enable/disable specific tracking categories. Your preferences are saved automatically.
@@ -168,7 +168,7 @@ Open the popup and use the switches to enable/disable specific tracking categori
 ### Reset to Defaults
 Click "Reset to Defaults" at the bottom of the popup to restore all original settings and reset the statistics.
 
-## 🔒 Privacy
+## Privacy
 
 - The extension runs locally in your browser
 - It does not send data to external servers
@@ -177,7 +177,7 @@ Click "Reset to Defaults" at the bottom of the popup to restore all original set
 - Open source - you can view all the code
 - See [PRIVACY-POLICY.md](PRIVACY-POLICY.md) for full details
 
-## 🛠️ Extension Files
+## Extension Files
 
 - `manifest.json` - Extension configuration
 - `cleaner.js` - Shared URL cleaning logic and tracking parameter lists
@@ -198,7 +198,7 @@ Requires Node.js 18 or later, with no dependencies to install:
 node --test
 ```
 
-## 📊 What's New
+## What's New
 
 ### Version 2.0.0 (Current): New design
 - **Redesigned popup**: calm Braun-inspired look with warm neutral panels and a single orange accent
@@ -247,7 +247,7 @@ node --test
 - Basic URL cleaning
 - Open clean link feature
 
-## 🎨 Design Inspiration
+## Design Inspiration
 
 The current UI is inspired by:
 - Dieter Rams' work at Braun and his principle "less, but better"
@@ -256,11 +256,11 @@ The current UI is inspired by:
 
 Earlier versions (up to 1.3) used a retro skeuomorphic design with amber VFD displays.
 
-## 📄 License
+## License
 
 Free for personal and commercial use.
 
-## 🤝 Contribute
+## Contribute
 
 Feel free to modify and improve the extension!
 
@@ -271,4 +271,4 @@ If you find any bugs or have suggestions, please open an issue on GitHub.
 
 **Note**: This extension is inspired by the "Copy Link Without Site Tracking" feature in Firefox, enhanced with site-aware cleaning, redirect unwrapping and visual management.
 
-Made for a cleaner, more private web. 🔗✨
+Made for a cleaner, more private web.

@@ -196,7 +196,14 @@ node --test
 
 ## 📊 What's New
 
-### Version 1.3.0 (Current): Share-safe links
+### Version 2.0.0 (Current): New design
+- **Redesigned popup**: calm Braun-inspired look with warm neutral panels and a single orange accent
+- **Light and dark mode**: follows your system setting automatically
+- **More readable**: sentence-case labels, each category shows its parameters underneath, no emoji or short codes
+- **Accessible**: text and switch colours meet WCAG AA contrast
+- Includes everything from 1.3.0 (site-specific rules, redirect unwrapping, what was removed, Alt+Shift+C shortcut)
+
+### Version 1.3.0: Share-safe links
 - **Site-specific rules**: Amazon product links shortened to `/dp/<ID>`; share and sender IDs removed on YouTube, X, Instagram, TikTok, Spotify and LinkedIn
 - **Redirect unwrapping**: Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn and Steam redirect links are replaced by their real destination
 - **What was removed**: the popup lists each removed parameter or redirect and why

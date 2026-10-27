@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Draws an icon SVG at an exact pixel size on a transparent background.
+     ?src=icon.svg&size=128 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Icon</title>
+<style>
+  * { margin: 0; padding: 0; }
+  html, body { background: transparent; }
+  img { display: block; }
+</style>
+</head>
+<body>
+<script>
+  const params = new URLSearchParams(location.search);
+  const img = document.createElement('img');
+  img.src = `../icon/${params.get('src')}`;
+  img.width = img.height = Number(params.get('size'));
+  document.body.appendChild(img);
+</script>
+</body>
+</html>

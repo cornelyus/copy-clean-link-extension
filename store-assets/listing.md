@@ -1,4 +1,4 @@
-# Store listing text (v2.0.0)
+# Store listing text (v2.0.1)
 
 Paste the block below into the Chrome Web Store **Store listing → Description** field. The short summary under the name comes from `description` in `manifest.json`.
 
@@ -9,9 +9,9 @@ Share links, not your data.
 Copy Clean Link removes tracking from links before you share them, so friends get the page instead of a trail back to you.
 
 WHAT IT DOES
-• Removes tracking parameters: UTM, fbclid, gclid, msclkid, Mailchimp, HubSpot and more
-• Site-aware cleaning: Amazon product links become short /dp/ links, and YouTube, X, Instagram, TikTok, Spotify and LinkedIn share IDs are removed. Some of these can reveal who shared the link.
-• Unwraps redirect links from Google, Facebook, Instagram, Outlook Safe Links, YouTube, Reddit, LinkedIn and Steam, so you get the real destination
+• Removes tracking parameters such as UTM tags, ad click IDs and email campaign tags
+• Site-aware cleaning: long shopping links are shortened to the product page, and the share IDs that popular video, social and music sites add to links are removed. Some of these can reveal who shared the link.
+• Unwraps redirect links from search engines, social networks and email link scanners, so you get the real destination
 • Shows what was removed and why
 
 HOW TO USE IT

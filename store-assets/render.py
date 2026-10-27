@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Render Chrome Web Store images from the real popup.
+"""Render the extension icons and the Chrome Web Store images from the real popup.
 
 Usage (from the repo root):  python3 store-assets/render.py
 Needs: chromium (or google-chrome) and ImageMagick's `convert`.
-Writes 24-bit PNGs without alpha, as the store requires, to store-assets/output/.
+Writes icon16/48/128.png (transparent) to the repo root, and 24-bit PNGs
+without alpha, as the store requires, to store-assets/output/.
 """
 import shutil
 import subprocess
@@ -55,6 +56,13 @@ SCREENSHOTS = [
     }),
 ]
 
+# Extension icons: (name, source SVG in icon/, size). 16px has its own drawing
+ICONS = [
+    ('icon16', 'icon-16.svg', 16),
+    ('icon48', 'icon.svg', 48),
+    ('icon128', 'icon.svg', 128),
+]
+
 # Promo tiles: (name, size parameter, width, height)
 PROMOS = [
     ('small-promo-440x280', 'small', 440, 280),
@@ -86,7 +94,7 @@ def build_popup():
     (BUILD / 'popup-dark.html').write_text(html.replace('href="../../popup.css"', 'href="popup-dark.css"'))
 
 
-def render(browser, page, query, width, height, name):
+def render(browser, page, query, width, height, name, out_dir=OUTPUT, alpha=False):
     raw = BUILD / f'{name}.raw.png'
     url = (HERE / 'templates' / page).as_uri() + '?' + urlencode(query)
     # Headless windows have a minimum width and lose some height to browser UI,
@@ -94,14 +102,16 @@ def render(browser, page, query, width, height, name):
     subprocess.run([
         browser, '--headless=new', '--no-sandbox', '--disable-gpu', '--hide-scrollbars',
         '--allow-file-access-from-files', '--force-device-scale-factor=1',
+        *(['--default-background-color=00000000'] if alpha else []),
         f'--window-size={max(width, 800)},{height + 300}', '--virtual-time-budget=4000',
         f'--screenshot={raw}', url,
     ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Crop to the exact size; the store wants 24-bit PNG with no alpha channel
-    out = OUTPUT / f'{name}.png'
+    out = out_dir / f'{name}.png'
+    fmt = ['PNG32:'] if alpha else ['-alpha', 'off', 'PNG24:']
     subprocess.run(['convert', str(raw), '-crop', f'{width}x{height}+0+0', '+repage',
-                    '-alpha', 'off', f'PNG24:{out}'], check=True)
+                    *fmt[:-1], f'{fmt[-1]}{out}'], check=True)
     print(f'{out.relative_to(ROOT)}  {width}x{height}')
 
 
@@ -109,6 +119,8 @@ def main():
     browser = find_browser()
     OUTPUT.mkdir(exist_ok=True)
     build_popup()
+    for name, src, size in ICONS:
+        render(browser, 'icon.html', {'src': src, 'size': size}, size, size, name, ROOT, alpha=True)
     for name, query in SCREENSHOTS:
         render(browser, 'screenshot.html', query, 1280, 800, name)
     for name, size, width, height in PROMOS:

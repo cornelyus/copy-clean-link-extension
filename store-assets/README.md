@@ -2,6 +2,12 @@
 
 Screenshots and promo tiles for the store listing, rendered from the real popup (`popup.html`, `popup.css`, `popup.js`, `cleaner.js`). Fake `chrome.*` APIs in `stub.js` stand in for the extension. This folder is not part of the extension package.
 
+## Extension icon (`icon/`)
+
+`icon/icon.svg` is the source for `icon48.png` and `icon128.png` (a 96px tile inside 16px of transparent padding, as Chrome recommends). `icon/icon-16.svg` is a separate drawing for the toolbar: the same link on whole pixels, set lower to leave room for the dot, so it stays sharp at 16px. The orange dot on the left is the same accent as the dot in the popup header and the store images. `render.py` writes all three PNGs to the repo root.
+
+`icon128.png` is also the store icon.
+
 ## Images (`output/`)
 
 | File | Store slot | Size |
@@ -14,7 +20,7 @@ All are 24-bit PNG without alpha, as the store requires.
 
 ## Regenerating after a UI change
 
-Needs Chromium or Google Chrome, and ImageMagick (`convert`). From the repo root:
+Needs Chromium or Google Chrome, and ImageMagick (`convert`). From the repo root, this regenerates the icons and every store image:
 
 ```sh
 python3 store-assets/render.py

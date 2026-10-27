@@ -201,7 +201,11 @@ node --test
 
 ## What's New
 
-### Version 2.0.0 (Current): New design
+### Version 2.0.1 (Current): New icon
+- **New icon** to match the 2.0 design: a charcoal tile with a light link and the orange dot from the popup
+- **Sharp in the toolbar**: the 16px icon is drawn separately so it stays crisp
+
+### Version 2.0.0: New design
 - **Redesigned popup**: calm Braun-inspired look with warm neutral panels and a single orange accent
 - **Light and dark mode**: follows your system setting automatically
 - **More readable**: sentence-case labels, each category shows its parameters underneath, no emoji or short codes

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Copy Clean Link icon: 96×96 tile inside 16px of transparent padding, as Chrome recommends.
+       Charcoal body, light link, and the popup's orange dot on the left as the only accent -->
+  <rect x="16" y="16" width="96" height="96" rx="22" fill="#1d1c1a"/>
+  <circle cx="39" cy="39" r="7" fill="#c2410c"/>
+  <g fill="none" stroke="#f0ede6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M58 58H42a13 13 0 0 0 0 26h16"/>
+    <path d="M70 58h16a13 13 0 0 1 0 26H70"/>
+    <path d="M51 71h26"/>
+  </g>
+</svg>

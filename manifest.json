@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Copy Clean Link - Remove URL Tracking",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Copy links without tracking: removes UTM & fbclid, shortens Amazon links, unwraps redirects. No data collected, works offline.",
   "permissions": [
     "contextMenus",
